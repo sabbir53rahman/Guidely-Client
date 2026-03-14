@@ -18,6 +18,7 @@ import { useAppDispatch } from "@/hooks/useRedux";
 import { logout } from "@/redux/features/auth/authSlice";
 import { NAV_LINKS } from "@/constants";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function Navbar() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <GraduationCap className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent font-heading">
               Guidely
             </span>
           </Link>
@@ -67,6 +68,7 @@ export default function Navbar() {
 
           {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             {isAuthenticated && user ? (
               <>
                 <Link href={getDashboardLink()}>
