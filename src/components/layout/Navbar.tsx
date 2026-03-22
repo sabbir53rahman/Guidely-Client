@@ -33,9 +33,7 @@ export default function Navbar() {
 
   const getDashboardLink = () => {
     if (!user) return "/login";
-    if (user.role === "admin") return "/admin-dashboard";
-    if (user.role === "mentor") return "/mentor-dashboard";
-    return "/dashboard/student";
+    return "/dashboard";
   };
 
   return (

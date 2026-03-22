@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 
 // Protected route groups
 const studentRoutes = [
-  "/dashboard/student",
+  "/student-dashboard",
   "/book-session",
   "/session-history",
   "/review",
@@ -50,7 +50,7 @@ export function middleware(request: NextRequest) {
             );
           }
           return NextResponse.redirect(
-            new URL("/dashboard/student", request.url),
+            new URL("/student-dashboard", request.url),
           );
         }
       } catch {
@@ -58,6 +58,25 @@ export function middleware(request: NextRequest) {
       }
     }
     return NextResponse.next();
+  }
+
+  // Redirect /dashboard to the appropriate role-based dashboard
+  if (pathname === "/dashboard") {
+    if (token) {
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        if (decoded.role === "admin") {
+          return NextResponse.redirect(new URL("/admin-dashboard", request.url));
+        }
+        if (decoded.role === "mentor") {
+          return NextResponse.redirect(new URL("/mentor-dashboard", request.url));
+        }
+        return NextResponse.redirect(new URL("/student-dashboard", request.url));
+      } catch {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Protected routes - check token
@@ -98,7 +117,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
+    "/dashboard",
+    "/student-dashboard/:path*",
     "/book-session/:path*",
     "/session-history",
     "/review/:path*",

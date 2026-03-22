@@ -80,10 +80,7 @@ export default function RegisterForm() {
 
       if (result.success) {
         toast.success("Registration successful! Welcome to Guidely.");
-        // The backend returns user role in result.data.user.role
-        if (result.data.user.role.toLowerCase() === "mentor")
-          router.push("/mentor-dashboard");
-        else router.push("/dashboard/student");
+        router.push("/dashboard");
       }
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
