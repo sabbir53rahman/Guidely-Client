@@ -1,5 +1,18 @@
 import { baseApi } from "@/redux/baseApi";
 import type { ApiResponse, User } from "@/types";
+import { setCredentials } from "./authSlice";
+
+interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  user?: User;
+}
+
+interface RegisterResponse extends LoginResponse {
+  user: User;
+  student?: Record<string, unknown>; // Student model from prisma
+  mentor?: Record<string, unknown>; // Mentor model from prisma
+}
 
 interface LoginRequest {
   email: string;
@@ -10,29 +23,84 @@ interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  role: "student" | "mentor";
-}
-
-interface AuthResponse {
-  user: User;
-  token: string;
 }
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<ApiResponse<AuthResponse>, LoginRequest>({
+    login: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch(
+              setCredentials({
+                user: data.data.user || null,
+                accessToken: data.data.accessToken,
+                refreshToken: data.data.refreshToken,
+              }),
+            );
+          }
+        } catch {
+          // Handle error if needed
+        }
+      },
     }),
-    register: builder.mutation<ApiResponse<AuthResponse>, RegisterRequest>({
+    registerStudent: builder.mutation<
+      ApiResponse<RegisterResponse>,
+      RegisterRequest
+    >({
       query: (data) => ({
-        url: "/auth/register",
+        url: "/auth/register-student",
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch(
+              setCredentials({
+                user: data.data.user,
+                accessToken: data.data.accessToken,
+                refreshToken: data.data.refreshToken,
+              }),
+            );
+          }
+        } catch {
+          // Handle error
+        }
+      },
+    }),
+    registerMentor: builder.mutation<
+      ApiResponse<RegisterResponse>,
+      RegisterRequest
+    >({
+      query: (data) => ({
+        url: "/auth/register-mentor",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.success) {
+            dispatch(
+              setCredentials({
+                user: data.data.user,
+                accessToken: data.data.accessToken,
+                refreshToken: data.data.refreshToken,
+              }),
+            );
+          }
+        } catch {
+          // Handle error
+        }
+      },
     }),
     getMe: builder.query<ApiResponse<User>, void>({
       query: () => "/auth/me",
@@ -46,7 +114,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     changePassword: builder.mutation<
       ApiResponse<null>,
-      { oldPassword: string; newPassword: string }
+      { currentPassword: string; newPassword: string }
     >({
       query: (data) => ({
         url: "/auth/change-password",
@@ -59,7 +127,8 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useLoginMutation,
-  useRegisterMutation,
+  useRegisterStudentMutation,
+  useRegisterMentorMutation,
   useGetMeQuery,
   useLogoutMutation,
   useChangePasswordMutation,

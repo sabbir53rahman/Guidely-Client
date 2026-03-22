@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { jwtDecode } from "jwt-decode";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -43,9 +44,18 @@ export default function LoginForm() {
       const result = await login(data).unwrap();
       if (result.success) {
         toast.success("Login successful! Welcome back.");
-        if (result.data.user.role === "admin") router.push("/admin-dashboard");
-        else if (result.data.user.role === "mentor")
-          router.push("/mentor-dashboard");
+
+        let role = result.data.user?.role;
+
+        if (!role) {
+          const decoded = jwtDecode<{ role: string }>(result.data.accessToken);
+          role = decoded.role;
+        }
+
+        const normalizedRole = role?.toLowerCase();
+
+        if (normalizedRole === "admin") router.push("/admin-dashboard");
+        else if (normalizedRole === "mentor") router.push("/mentor-dashboard");
         else router.push("/dashboard/student");
       }
     } catch (error: unknown) {

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { AuthState, User } from "@/types";
+import type { AuthState, User, UserRole } from "@/types";
+import { jwtDecode } from "jwt-decode";
 
 const initialState: AuthState = {
   user: null,
@@ -8,17 +9,48 @@ const initialState: AuthState = {
   isLoading: false,
 };
 
+interface JWTPayload {
+  userId?: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  role?: string;
+}
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; token: string }>,
+      action: PayloadAction<{
+        user: User | null;
+        accessToken: string;
+        refreshToken?: string;
+      }>,
     ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      const { user, accessToken } = action.payload;
+      state.token = accessToken;
       state.isAuthenticated = true;
+
+      if (user) {
+        state.user = user;
+      } else {
+        // Decode token to get user info if not provided
+        try {
+          const decoded = jwtDecode<JWTPayload>(accessToken);
+          state.user = {
+            _id: decoded.userId || decoded.id || "",
+            name: decoded.name || "",
+            email: decoded.email || "",
+            role: (decoded.role?.toLowerCase() as UserRole) || "student",
+            isVerified: true,
+            createdAt: new Date().toISOString(),
+          };
+        } catch (error) {
+          console.error("Failed to decode token:", error);
+        }
+      }
     },
     logout: (state) => {
       state.user = null;

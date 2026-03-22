@@ -23,7 +23,10 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="py-24 bg-muted/20 transition-colors duration-300">
+    <section
+      id="how-it-works"
+      className="py-24 bg-muted/20 transition-colors duration-300"
+    >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 sm:mb-20">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-heading font-bold mb-6 text-foreground">

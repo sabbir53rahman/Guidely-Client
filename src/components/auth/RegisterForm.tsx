@@ -28,7 +28,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import {
+  useRegisterStudentMutation,
+  useRegisterMentorMutation,
+} from "@/redux/features/auth/authApi";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,8 +44,13 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [registerUser, { isLoading }] = useRegisterMutation();
+  const [registerStudent, { isLoading: isRegisteringStudent }] =
+    useRegisterStudentMutation();
+  const [registerMentor, { isLoading: isRegisteringMentor }] =
+    useRegisterMentorMutation();
   const router = useRouter();
+
+  const isLoading = isRegisteringStudent || isRegisteringMentor;
 
   const {
     register,
@@ -61,10 +69,19 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      const result = await registerUser(data).unwrap();
+      const { role, ...payload } = data;
+      let result;
+
+      if (role === "student") {
+        result = await registerStudent(payload).unwrap();
+      } else {
+        result = await registerMentor(payload).unwrap();
+      }
+
       if (result.success) {
         toast.success("Registration successful! Welcome to Guidely.");
-        if (result.data.user.role === "mentor")
+        // The backend returns user role in result.data.user.role
+        if (result.data.user.role.toLowerCase() === "mentor")
           router.push("/mentor-dashboard");
         else router.push("/dashboard/student");
       }

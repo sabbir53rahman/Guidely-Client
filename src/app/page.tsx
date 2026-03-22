@@ -4,7 +4,8 @@ import Footer from "@/components/layout/Footer";
 import { Hero } from "@/components/landing/Hero";
 import { Stats } from "@/components/landing/Stats";
 import { Features } from "@/components/landing/Features";
-import { SocialProof } from "@/components/landing/SocialProof";
+import { TopMentors } from "@/components/landing/TopMentors";
+import { Testimonials } from "@/components/landing/Testimonials";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 
@@ -21,9 +22,10 @@ export default function LandingPage() {
       <main className="flex-1">
         <Hero />
         <Stats />
+        <TopMentors />
         <HowItWorks />
         <Features />
-        <SocialProof />
+        <Testimonials />
         <FinalCTA />
       </main>
       <Footer />
