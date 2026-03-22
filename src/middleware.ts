@@ -39,12 +39,13 @@ export function middleware(request: NextRequest) {
       try {
         const decoded: DecodedToken = jwtDecode(token);
         if (decoded.exp * 1000 > Date.now()) {
-          if (decoded.role === "admin") {
+          const role = decoded.role?.toLowerCase() || "";
+          if (role === "admin" || role === "super_admin") {
             return NextResponse.redirect(
               new URL("/admin-dashboard", request.url),
             );
           }
-          if (decoded.role === "mentor") {
+          if (role === "mentor") {
             return NextResponse.redirect(
               new URL("/mentor-dashboard", request.url),
             );
@@ -65,10 +66,11 @@ export function middleware(request: NextRequest) {
     if (token) {
       try {
         const decoded: DecodedToken = jwtDecode(token);
-        if (decoded.role === "admin") {
+        const role = decoded.role?.toLowerCase() || "";
+        if (role === "admin" || role === "super_admin") {
           return NextResponse.redirect(new URL("/admin-dashboard", request.url));
         }
-        if (decoded.role === "mentor") {
+        if (role === "mentor") {
           return NextResponse.redirect(new URL("/mentor-dashboard", request.url));
         }
         return NextResponse.redirect(new URL("/student-dashboard", request.url));
@@ -93,17 +95,18 @@ export function middleware(request: NextRequest) {
       if (decoded.exp * 1000 <= Date.now()) {
         return NextResponse.redirect(new URL("/login", request.url));
       }
+      const role = decoded.role?.toLowerCase() || "";
       // Role-based access
       if (
         adminRoutes.some((r) => pathname.startsWith(r)) &&
-        decoded.role !== "admin"
+        role !== "admin" && role !== "super_admin"
       ) {
         return NextResponse.redirect(new URL("/", request.url));
       }
       if (
         mentorRoutes.some((r) => pathname.startsWith(r)) &&
-        decoded.role !== "mentor" &&
-        decoded.role !== "admin"
+        role !== "mentor" &&
+        role !== "admin" && role !== "super_admin"
       ) {
         return NextResponse.redirect(new URL("/", request.url));
       }

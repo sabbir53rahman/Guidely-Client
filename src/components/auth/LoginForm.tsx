@@ -45,6 +45,7 @@ export default function LoginForm() {
       if (result.success) {
         toast.success("Login successful! Welcome back.");
 
+
         router.push("/dashboard");
       }
     } catch (error: unknown) {

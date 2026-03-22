@@ -80,6 +80,8 @@ export default function RegisterForm() {
 
       if (result.success) {
         toast.success("Registration successful! Welcome to Guidely.");
+
+
         router.push("/dashboard");
       }
     } catch (error: unknown) {

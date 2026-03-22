@@ -28,6 +28,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
+    document.cookie = "token=; path=/; max-age=0; SameSite=Lax";
     router.push("/");
   };
 

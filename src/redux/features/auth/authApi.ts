@@ -37,6 +37,9 @@ const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (data.success) {
+            if (typeof document !== "undefined") {
+              document.cookie = `token=${data.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
+            }
             dispatch(
               setCredentials({
                 user: data.data.user || null,
@@ -63,6 +66,9 @@ const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (data.success) {
+            if (typeof document !== "undefined") {
+              document.cookie = `token=${data.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
+            }
             dispatch(
               setCredentials({
                 user: data.data.user,
@@ -89,6 +95,9 @@ const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (data.success) {
+            if (typeof document !== "undefined") {
+              document.cookie = `token=${data.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
+            }
             dispatch(
               setCredentials({
                 user: data.data.user,
