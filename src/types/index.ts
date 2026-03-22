@@ -33,7 +33,7 @@ export interface Review {
 }
 
 export interface Mentor {
-  _id: string;
+  id: string;
   user: User;
   bio: string;
   expertise: Expertise[];

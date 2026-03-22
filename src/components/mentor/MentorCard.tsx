@@ -11,12 +11,15 @@ interface MentorCardProps {
 }
 
 export function MentorCard({ mentor }: MentorCardProps) {
-  const { user, bio, expertise, hourlyRate, rating, totalReviews } = mentor;
+  const { id, user, bio, expertise, hourlyRate, rating, totalReviews } = mentor;
+
+  console.log("mentor info", mentor);
 
   return (
-    <div className="group bg-background rounded-[2.5rem] p-6 border border-border shadow-sm hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex flex-col h-full">
+    <div className="group bg-card rounded-[2.5rem] p-6 border border-border shadow-sm hover:shadow-premium hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex flex-col h-full relative">
+      <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       {/* Photo & Rating Overlay */}
-      <div className="relative w-full aspect-square rounded-[2rem] overflow-hidden mb-6 bg-muted">
+      <div className="relative w-full aspect-square rounded-[2rem] overflow-hidden mb-6 bg-muted z-10">
         <Image
           src={
             user.avatar ||
@@ -37,13 +40,13 @@ export function MentorCard({ mentor }: MentorCardProps) {
         </div>
       </div>
 
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-4 relative z-10">
         <div>
-          <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+          <h3 className="text-xl font-black tracking-tight text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
             {user.name}
           </h3>
           <div className="flex flex-wrap gap-2 mt-2">
-            {expertise.slice(0, 2).map((exp, idx) => (
+            {(expertise || []).slice(0, 2).map((exp, idx) => (
               <span
                 key={idx}
                 className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider border border-primary/10"
@@ -70,7 +73,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-6">
+      <div className="flex items-center justify-between pt-6 relative z-10">
         <div>
           <span className="text-2xl font-black text-foreground">
             ${hourlyRate}
@@ -79,8 +82,8 @@ export function MentorCard({ mentor }: MentorCardProps) {
             /session
           </span>
         </div>
-        <Link href={`/mentors/${mentor._id}`}>
-          <Button className="rounded-xl px-6 h-11 font-black group">
+        <Link href={`/mentors/${id}`} className="flex-1 max-w-[140px]">
+          <Button className="w-full rounded-xl h-11 font-black group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             View Profile
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>

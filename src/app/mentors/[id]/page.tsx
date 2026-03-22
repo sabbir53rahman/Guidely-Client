@@ -48,13 +48,13 @@ export default function MentorProfilePage() {
 
   const {
     user,
-    bio,
-    expertise,
-    hourlyRate,
-    rating,
-    totalReviews,
-    totalSessions,
-    languages,
+    bio = "No bio available.",
+    expertise = [],
+    hourlyRate = 0,
+    rating = 0,
+    totalReviews = 0,
+    totalSessions = 0,
+    languages = [],
   } = mentor;
 
   return (
@@ -64,11 +64,11 @@ export default function MentorProfilePage() {
       <main className="flex-1">
         {/* Profile Header Block */}
         <section className="relative pt-20 pb-40 overflow-hidden">
-          <div className="absolute inset-0 bg-linear-to-b from-indigo-100/50 to-transparent dark:from-indigo-950/20" />
+          <div className="absolute inset-0 bg-linear-to-b from-primary/10 to-transparent dark:from-primary/5" />
 
           {/* Decorative Orbs */}
-          <div className="absolute top-20 right-0 h-[600px] w-[600px] bg-primary/5 rounded-full blur-[120px] -mr-80" />
-          <div className="absolute top-40 left-0 h-[400px] w-[400px] bg-secondary/5 rounded-full blur-[100px] -ml-40" />
+          <div className="absolute top-20 right-0 h-[600px] w-[600px] bg-primary/10 rounded-full blur-[120px] -mr-80" />
+          <div className="absolute top-40 left-0 h-[400px] w-[400px] bg-secondary/15 rounded-full blur-[100px] -ml-40" />
 
           <div className="container mx-auto max-w-7xl px-4 relative z-10">
             <div className="flex flex-col lg:flex-row gap-12 sm:gap-16">
@@ -77,10 +77,10 @@ export default function MentorProfilePage() {
                 <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-4 border-background group bg-muted">
                   <Image
                     src={
-                      user.avatar ||
+                      user?.avatar ||
                       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600"
                     }
-                    alt={user.name}
+                    alt={user?.name || "Mentor"}
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                     priority
@@ -97,18 +97,18 @@ export default function MentorProfilePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-background p-6 rounded-[2rem] border border-border shadow-sm flex flex-col items-center justify-center text-center">
                     <div className="text-2xl font-black text-foreground">
-                      {rating}
+                      {rating || 0}
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                       <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-                        {totalReviews} Reviews
+                        {totalReviews || 0} Reviews
                       </span>
                     </div>
                   </div>
                   <div className="bg-background p-6 rounded-[2rem] border border-border shadow-sm flex flex-col items-center justify-center text-center">
                     <div className="text-2xl font-black text-foreground">
-                      {totalSessions}+
+                      {totalSessions || 0}+
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <Clock className="h-3 w-3 text-primary" />
@@ -124,26 +124,26 @@ export default function MentorProfilePage() {
               <div className="flex-1 space-y-10">
                 <div>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
-                    <h1 className="text-5xl sm:text-7xl font-heading font-black tracking-tight text-foreground">
-                      {user.name}
+                    <h1 className="text-5xl sm:text-7xl font-heading font-black tracking-tight bg-clip-text text-transparent bg-linear-to-r from-foreground via-foreground/90 to-primary">
+                      {user?.name || "Mentor"}
                     </h1>
-                    <div className="inline-flex h-10 items-center px-4 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20">
-                      MEMBER SINCE 2023
+                    <div className="inline-flex h-10 items-center px-4 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20 shadow-inner">
+                      VERIFIED PROFESSIONAL
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-4 text-muted-foreground font-medium text-lg leading-relaxed mb-8">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-2xl border border-border shadow-sm">
                       <Briefcase className="h-5 w-5 text-primary" />
                       Professional Mentor
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-2xl border border-border shadow-sm">
                       <MapPin className="h-5 w-5 text-secondary" />
                       Remote Globally
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Languages className="h-5 w-5 text-indigo-500" />
-                      {languages.join(", ")}
+                    <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-2xl border border-border shadow-sm">
+                      <Languages className="h-5 w-5 text-primary/80" />
+                      {(languages || []).join(", ") || "Languages not specified"}
                     </div>
                   </div>
 
@@ -153,7 +153,7 @@ export default function MentorProfilePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  {expertise.map((exp, i) => (
+                  {(expertise || []).map((exp, i) => (
                     <div
                       key={i}
                       className="px-6 py-3 rounded-2xl bg-background border border-border shadow-sm flex flex-col"
@@ -162,7 +162,7 @@ export default function MentorProfilePage() {
                         {exp.category}
                       </span>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        {exp.skills.map((skill) => (
+                        {(exp.skills || []).map((skill) => (
                           <span
                             key={skill}
                             className="text-sm font-bold text-foreground"
@@ -238,7 +238,7 @@ export default function MentorProfilePage() {
                 </h2>
 
                 <div className="grid gap-6">
-                  {mentor.reviews.length > 0 ? (
+                  {mentor.reviews && mentor.reviews.length > 0 ? (
                     mentor.reviews.map((review) => (
                       <div
                         key={review._id}
@@ -291,17 +291,18 @@ export default function MentorProfilePage() {
             {/* Right: Sticky Sidebar for availability info */}
             <div className="lg:col-span-1">
               <div className="sticky top-32 space-y-8">
-                <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 h-32 w-32 bg-primary/20 rounded-full blur-3xl -mr-16 -mt-16" />
+                <div className="bg-primary rounded-[2.5rem] p-10 text-primary-foreground shadow-2xl shadow-primary/30 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 h-40 w-40 bg-secondary/30 rounded-full blur-[50px] -mr-16 -mt-16 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 h-32 w-32 bg-background/20 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none" />
 
-                  <h3 className="text-2xl font-black mb-6 flex items-center gap-3">
-                    <CalendarDays className="h-6 w-6 text-secondary" />
+                  <h3 className="text-2xl font-black mb-6 flex items-center gap-3 relative z-10">
+                    <CalendarDays className="h-6 w-6 text-primary-foreground/90" />
                     Availability
                   </h3>
-                  <div className="space-y-4 mb-8">
-                    <div className="flex justify-between items-center py-3 border-b border-white/10 uppercase tracking-widest text-[10px] font-black text-white/50">
+                  <div className="space-y-4 mb-8 relative z-10">
+                    <div className="flex justify-between items-center py-3 border-b border-primary-foreground/20 uppercase tracking-widest text-[10px] font-black text-primary-foreground/70">
                       <span>Workdays</span>
-                      <span className="text-white">Mon — Fri</span>
+                      <span className="text-primary-foreground">Mon — Fri</span>
                     </div>
                     <div className="flex justify-between items-center py-3 border-b border-white/10 uppercase tracking-widest text-[10px] font-black text-white/50">
                       <span>Timezone</span>
@@ -324,20 +325,23 @@ export default function MentorProfilePage() {
                   </Dialog>
                 </div>
 
-                <div className="bg-background rounded-[2.5rem] p-10 border border-border">
-                  <h3 className="text-xl font-black mb-6">Badges & Awards</h3>
-                  <div className="space-y-4">
+                <div className="bg-background rounded-[2.5rem] p-10 border border-border shadow-premium">
+                  <h3 className="text-xl font-black mb-6 flex items-center gap-3">
+                    <Award className="h-5 w-5 text-primary" />
+                    Badges & Awards
+                  </h3>
+                  <div className="space-y-5">
                     {[
                       { label: "Top Rated 2024", color: "bg-yellow-400" },
-                      { label: "Elite Mentor", color: "bg-indigo-500" },
-                      { label: "Community Leader", color: "bg-primary" },
+                      { label: "Elite Mentor", color: "bg-primary" },
+                      { label: "Community Leader", color: "bg-secondary" },
                     ].map((badge) => (
                       <div
                         key={badge.label}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-4 bg-muted/50 p-3 rounded-2xl"
                       >
                         <div
-                          className={`h-2 w-2 rounded-full ${badge.color}`}
+                          className={`h-3 w-3 rounded-full ${badge.color} shadow-lg ring-4 ring-background`}
                         />
                         <span className="text-sm font-bold text-foreground">
                           {badge.label}
