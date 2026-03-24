@@ -12,7 +12,7 @@ const studentRoutes = [
 const mentorRoutes = [
   "/dashboard/mentor",
   "/mentor-dashboard",
-  "/create-profile",
+  "/profile",
   "/availability",
   "/manage-sessions",
 ];
@@ -126,7 +126,7 @@ export const config = {
     "/session-history",
     "/review/:path*",
     "/mentor-dashboard/:path*",
-    "/create-profile",
+    "/profile",
     "/availability",
     "/manage-sessions",
     "/admin-dashboard",

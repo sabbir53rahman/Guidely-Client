@@ -36,7 +36,7 @@ const SIDEBAR_ITEMS = [
   },
   {
     label: "My Profile",
-    href: "/create-profile",
+    href: "/profile",
     icon: UserCircle,
   },
   {

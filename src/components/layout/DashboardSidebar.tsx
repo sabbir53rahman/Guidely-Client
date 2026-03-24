@@ -29,7 +29,7 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
     { label: "My Calendar", href: "/availability", icon: Calendar },
     { label: "My Sessions", href: "/manage-sessions", icon: MessageSquare },
     { label: "Earnings", href: "/payments", icon: CreditCard },
-    { label: "My Profile", href: "/create-profile", icon: UserCircle },
+    { label: "My Profile", href: "/profile", icon: UserCircle },
     { label: "Settings", href: "/settings", icon: Settings },
   ],
   student: [

@@ -13,7 +13,6 @@ import {
   Clock,
   ChevronRight,
   Award,
-  Languages,
   CheckCircle2,
   Loader2,
   CalendarDays,
@@ -49,12 +48,9 @@ export default function MentorProfilePage() {
   const {
     user,
     bio = "No bio available.",
-    expertise = [],
-    hourlyRate = 0,
-    rating = 0,
-    totalReviews = 0,
-    totalSessions = 0,
-    languages = [],
+    expertise = "",
+    experience = 0,
+    averageRating = 0,
   } = mentor;
 
   return (
@@ -78,9 +74,10 @@ export default function MentorProfilePage() {
                   <Image
                     src={
                       user?.avatar ||
+                      user?.image ||
                       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600"
                     }
-                    alt={user?.name || "Mentor"}
+                    alt={user?.name || mentor.name}
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                     priority
@@ -97,23 +94,23 @@ export default function MentorProfilePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-background p-6 rounded-[2rem] border border-border shadow-sm flex flex-col items-center justify-center text-center">
                     <div className="text-2xl font-black text-foreground">
-                      {rating || 0}
+                      {averageRating || 0}
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                       <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-                        {totalReviews || 0} Reviews
+                        Rating
                       </span>
                     </div>
                   </div>
                   <div className="bg-background p-6 rounded-[2rem] border border-border shadow-sm flex flex-col items-center justify-center text-center">
                     <div className="text-2xl font-black text-foreground">
-                      {totalSessions || 0}+
+                      {experience || 0}
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <Clock className="h-3 w-3 text-primary" />
                       <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-                        Sessions
+                        Years Exp.
                       </span>
                     </div>
                   </div>
@@ -125,7 +122,7 @@ export default function MentorProfilePage() {
                 <div>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6">
                     <h1 className="text-5xl sm:text-7xl font-heading font-black tracking-tight bg-clip-text text-transparent bg-linear-to-r from-foreground via-foreground/90 to-primary">
-                      {user?.name || "Mentor"}
+                      {user?.name || mentor.name}
                     </h1>
                     <div className="inline-flex h-10 items-center px-4 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20 shadow-inner">
                       VERIFIED PROFESSIONAL
@@ -141,10 +138,6 @@ export default function MentorProfilePage() {
                       <MapPin className="h-5 w-5 text-secondary" />
                       Remote Globally
                     </div>
-                    <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-2xl border border-border shadow-sm">
-                      <Languages className="h-5 w-5 text-primary/80" />
-                      {(languages || []).join(", ") || "Languages not specified"}
-                    </div>
                   </div>
 
                   <p className="text-xl text-muted-foreground leading-relaxed font-normal max-w-3xl italic">
@@ -153,38 +146,19 @@ export default function MentorProfilePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  {(expertise || []).map((exp, i) => (
-                    <div
-                      key={i}
-                      className="px-6 py-3 rounded-2xl bg-background border border-border shadow-sm flex flex-col"
-                    >
+                  {expertise && (
+                    <div className="px-6 py-3 rounded-2xl bg-background border border-border shadow-sm flex flex-col">
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">
-                        {exp.category}
+                        Primary Expertise
                       </span>
-                      <div className="flex flex-wrap gap-2 mt-1">
-                        {(exp.skills || []).map((skill) => (
-                          <span
-                            key={skill}
-                            className="text-sm font-bold text-foreground"
-                          >
-                            #{skill}
-                          </span>
-                        ))}
-                      </div>
+                      <span className="text-sm font-bold text-foreground">
+                        {expertise}
+                      </span>
                     </div>
-                  ))}
+                  )}
                 </div>
 
                 <div className="pt-8 flex flex-col sm:flex-row items-center gap-8">
-                  <div className="flex items-center gap-4">
-                    <span className="text-5xl font-black text-foreground">
-                      ${hourlyRate}
-                    </span>
-                    <span className="text-muted-foreground font-bold">
-                      per session <br /> (60 mins)
-                    </span>
-                  </div>
-
                   <Dialog>
                     <DialogTrigger
                       render={

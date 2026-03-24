@@ -2,12 +2,14 @@
 export type UserRole = "student" | "mentor" | "admin";
 
 export interface User {
-  _id: string;
+  id: string;
   name: string;
   email: string;
-  role: UserRole;
-  avatar?: string;
-  isVerified: boolean;
+  role: string | UserRole;
+  avatar?: string | null;
+  image?: string | null;
+  isVerified?: boolean;
+  status?: string;
   createdAt: string;
 }
 
@@ -19,14 +21,9 @@ export interface AuthState {
 }
 
 // ─── Mentor ───────────────────────────────────────────────────────────────────
-export interface Expertise {
-  category: string;
-  skills: string[];
-}
-
 export interface Review {
   _id: string;
-  student: Pick<User, "_id" | "name" | "avatar">;
+  student: Pick<User, "id" | "name" | "avatar">;
   rating: number;
   comment: string;
   createdAt: string;
@@ -34,17 +31,23 @@ export interface Review {
 
 export interface Mentor {
   id: string;
+  userId: string;
   user: User;
-  bio: string;
-  expertise: Expertise[];
-  hourlyRate: number;
-  rating: number;
-  totalReviews: number;
-  totalSessions: number;
-  languages: string[];
+  name: string;
+  email: string;
+  profilePhoto?: string | null;
+  contactNumber?: string | null;
+  address?: string | null;
+  registrationNumber?: string | null;
+  experience: number;
+  bio?: string | null;
+  expertise?: string | null;
+  averageRating: number;
   isAvailable: boolean;
-  reviews: Review[];
+  isDeleted: boolean;
+  reviews?: Review[];
   createdAt: string;
+  updatedAt: string;
 }
 
 // ─── Availability ─────────────────────────────────────────────────────────────
