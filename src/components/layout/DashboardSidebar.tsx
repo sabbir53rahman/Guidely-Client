@@ -2,7 +2,24 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { GraduationCap, LayoutDashboard, Calendar, UserCircle, MessageSquare, Settings, LogOut, ChevronLeft, ChevronRight, ShieldCheck, CreditCard, Activity, Users, BookOpen, Star, Briefcase } from "lucide-react";
+import {
+  GraduationCap,
+  LayoutDashboard,
+  Calendar,
+  UserCircle,
+  MessageSquare,
+  Settings,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
+  CreditCard,
+  Activity,
+  Users,
+  BookOpen,
+  Star,
+  Briefcase,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -18,7 +35,7 @@ interface NavItem {
 
 const NAV_CONFIG: Record<string, NavItem[]> = {
   admin: [
-    { label: "Overview", href: "/admin-dashboard", icon: LayoutDashboard },
+    { label: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
     { label: "Manage Users", href: "/manage-users", icon: Users },
     { label: "Live Sessions", href: "/manage-sessions", icon: Activity },
     { label: "Finances", href: "/payments", icon: DollarIcon },
@@ -39,14 +56,20 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
     { label: "Reviews", href: "/review", icon: Star },
     { label: "My Profile", href: "/profile", icon: UserCircle },
     { label: "Settings", href: "/settings", icon: Settings },
-  ]
+  ],
 };
 
 function DollarIcon(props: React.ComponentProps<"svg">) {
   return <CreditCard {...props} />;
 }
 
-export function DashboardSidebar({ isMobile, onNavClick }: { isMobile?: boolean; onNavClick?: () => void }) {
+export function DashboardSidebar({
+  isMobile,
+  onNavClick,
+}: {
+  isMobile?: boolean;
+  onNavClick?: () => void;
+}) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
@@ -70,22 +93,35 @@ export function DashboardSidebar({ isMobile, onNavClick }: { isMobile?: boolean;
     <aside
       className={cn(
         "relative flex flex-col bg-card text-card-foreground transition-all duration-300 h-screen top-0 border-r border-border shadow-soft",
-        collapsed ? "w-20" : "w-72"
+        collapsed ? "w-20" : "w-72",
       )}
     >
       {/* Brand / Logo */}
-      <div className="p-6 h-20 flex items-center gap-3 border-b border-border/50">
+      <Link
+        href={
+          normalizedRole === "admin"
+            ? "/admin-dashboard"
+            : normalizedRole === "mentor"
+              ? "/mentor-dashboard"
+              : "/student-dashboard"
+        }
+        className="p-6 h-20 flex items-center gap-3 border-b border-border/50 hover:bg-accent/50 transition-colors"
+      >
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-secondary shadow-lg shadow-primary/20">
-          {normalizedRole === "admin" ? <ShieldCheck className="h-5 w-5 text-white" /> : 
-           normalizedRole === "mentor" ? <Briefcase className="h-5 w-5 text-white" /> : 
-           <GraduationCap className="h-5 w-5 text-white" />}
+          {normalizedRole === "admin" ? (
+            <ShieldCheck className="h-5 w-5 text-white" />
+          ) : normalizedRole === "mentor" ? (
+            <Briefcase className="h-5 w-5 text-white" />
+          ) : (
+            <GraduationCap className="h-5 w-5 text-white" />
+          )}
         </div>
         {!collapsed && (
           <span className="font-heading font-black text-2xl tracking-tight bg-clip-text text-transparent bg-linear-to-r from-primary to-secondary">
             Guidely
           </span>
         )}
-      </div>
+      </Link>
 
       {/* Toggle Button */}
       {!isMobile && (
@@ -93,7 +129,11 @@ export function DashboardSidebar({ isMobile, onNavClick }: { isMobile?: boolean;
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3 top-24 h-6 w-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-xl hover:scale-110 transition-transform z-50 ring-4 ring-background"
         >
-          {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+          {collapsed ? (
+            <ChevronRight className="h-3 w-3" />
+          ) : (
+            <ChevronLeft className="h-3 w-3" />
+          )}
         </button>
       )}
 
@@ -105,23 +145,31 @@ export function DashboardSidebar({ isMobile, onNavClick }: { isMobile?: boolean;
 
           return (
             <Link
-               key={item.href}
-               href={item.href}
-               onClick={onNavClick}
-               className={cn(
-                 "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group relative overflow-hidden",
-                 isActive 
-                   ? "bg-primary text-primary-foreground font-bold shadow-md shadow-primary/20" 
-                   : "text-muted-foreground font-medium hover:text-foreground hover:bg-accent/50"
-               )}
+              key={item.href}
+              href={item.href}
+              onClick={onNavClick}
+              className={cn(
+                "flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group relative overflow-hidden",
+                isActive
+                  ? "bg-primary text-primary-foreground font-bold shadow-md shadow-primary/20"
+                  : "text-muted-foreground font-medium hover:text-foreground hover:bg-accent/50",
+              )}
             >
               {/* Animated active background overlay */}
-              {isActive && <div className="absolute inset-0 bg-primary opacity-10" />}
+              {isActive && (
+                <div className="absolute inset-0 bg-primary opacity-10" />
+              )}
 
-              <Icon className={cn("h-5 w-5 shrink-0 transition-transform group-hover:scale-110 relative z-10")} />
+              <Icon
+                className={cn(
+                  "h-5 w-5 shrink-0 transition-transform group-hover:scale-110 relative z-10",
+                )}
+              />
 
               {!collapsed && (
-                <span className="text-sm tracking-wide relative z-10">{item.label}</span>
+                <span className="text-sm tracking-wide relative z-10">
+                  {item.label}
+                </span>
               )}
 
               {/* Tooltip for collapsed state */}
@@ -143,7 +191,7 @@ export function DashboardSidebar({ isMobile, onNavClick }: { isMobile?: boolean;
           variant="ghost"
           className={cn(
             "w-full flex items-center gap-4 h-14 rounded-2xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all px-4 group",
-            collapsed && "justify-center"
+            collapsed && "justify-center",
           )}
         >
           <LogOut className="h-5 w-5 shrink-0 group-hover:-translate-x-1 transition-transform" />

@@ -1,9 +1,9 @@
 import { baseApi } from "@/redux/baseApi";
-import type { ApiResponse, PaginatedResponse, User, AdminStats } from "@/types";
+import type { ApiResponse, PaginatedResponse, User, IAdminStats } from "@/types";
 
 const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAdminStats: builder.query<ApiResponse<AdminStats>, void>({
+    getAdminStats: builder.query<ApiResponse<IAdminStats>, void>({
       query: () => "/admin/stats",
       providesTags: ["Admin"],
     }),

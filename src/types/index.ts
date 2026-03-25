@@ -82,15 +82,34 @@ export interface Session {
   createdAt: string;
 }
 
+export type IBooking = Session;
+
 // ─── Admin ────────────────────────────────────────────────────────────────────
-export interface AdminStats {
+export interface IAdminStats {
   totalUsers: number;
   totalMentors: number;
-  totalSessions: number;
+  totalStudents: number;
+  totalBookings: number;
   totalRevenue: number;
-  pendingSessions: number;
-  completedSessions: number;
+  recentBookings: IBooking[];
 }
+
+export interface IMentorStats {
+  totalBookings: number;
+  totalReviews: number;
+  totalEarnings: number;
+  averageRating: number;
+  upcomingBookings: IBooking[];
+}
+
+export interface IStudentStats {
+  totalBookings: number;
+  totalReviews: number;
+  totalSpent: number;
+  upcomingBookings: IBooking[];
+}
+
+export type IOverviewStats = IAdminStats | IMentorStats | IStudentStats;
 
 // ─── API Response ─────────────────────────────────────────────────────────────
 export interface ApiResponse<T> {
