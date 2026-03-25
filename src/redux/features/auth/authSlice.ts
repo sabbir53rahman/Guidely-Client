@@ -40,7 +40,7 @@ const authSlice = createSlice({
         try {
           const decoded = jwtDecode<JWTPayload>(accessToken);
           state.user = {
-            _id: decoded.userId || decoded.id || "",
+            id: decoded.userId || decoded.id || "",
             name: decoded.name || "",
             email: decoded.email || "",
             role: (decoded.role?.toLowerCase() as UserRole) || "student",
