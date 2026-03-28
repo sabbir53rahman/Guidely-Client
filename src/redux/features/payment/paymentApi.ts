@@ -14,8 +14,18 @@ export const paymentApi = baseApi.injectEndpoints({
       query: () => "/payments/me",
       providesTags: ["Payment"],
     }),
+    verifyPayment: builder.query({
+      query: (sessionId: string) => ({
+        url: `/payments/verify-payment?sessionId=${sessionId}`,
+        method: "GET",
+      }),
+      providesTags: ["Payment", "Booking"],
+    }),
   }),
 });
 
-export const { useCreateCheckoutSessionMutation, useGetMyPaymentsQuery } =
-  paymentApi;
+export const {
+  useCreateCheckoutSessionMutation,
+  useGetMyPaymentsQuery,
+  useVerifyPaymentQuery,
+} = paymentApi;

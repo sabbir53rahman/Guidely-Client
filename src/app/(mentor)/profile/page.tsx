@@ -18,6 +18,7 @@ import {
   Mail,
   Save,
   Rocket,
+  DollarSign,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,7 @@ function MentorProfileForm({ existingProfile }: { existingProfile?: Mentor }) {
     bio: existingProfile?.bio || "",
     expertise: existingProfile?.expertise || "",
     experience: existingProfile?.experience || 0,
+    hourlyRate: existingProfile?.hourlyRate || 0,
     contactNumber: existingProfile?.contactNumber || "",
     address: existingProfile?.address || "",
     registrationNumber: existingProfile?.registrationNumber || "",
@@ -51,7 +53,7 @@ function MentorProfileForm({ existingProfile }: { existingProfile?: Mentor }) {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "experience" ? Number(value) : value,
+      [name]: (name === "experience" || name === "hourlyRate") ? Number(value) : value,
     }));
   };
 
@@ -185,34 +187,57 @@ function MentorProfileForm({ existingProfile }: { existingProfile?: Mentor }) {
              </CardHeader>
              <CardContent className="p-10 space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-2">Primary Expertise</Label>
-                    <div className="relative">
-                       <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
-                       <Input 
-                         name="expertise"
-                         placeholder="e.g. Full Stack Development, UI/UX Design"
-                         className="pl-12 h-14 rounded-2xl border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold"
-                         value={formData.expertise}
-                         onChange={handleChange}
-                       />
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-2">Years of Experience</Label>
-                    <div className="relative">
-                       <Rocket className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
-                       <Input 
-                         name="experience"
-                         type="number"
-                         placeholder="0"
-                         className="pl-12 h-14 rounded-2xl border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold"
-                         value={formData.experience}
-                         onChange={handleChange}
-                       />
-                    </div>
-                  </div>
+                   <div className="space-y-3">
+                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-2">Primary Expertise</Label>
+                     <div className="relative">
+                        <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
+                        <Input 
+                          name="expertise"
+                          placeholder="e.g. Full Stack Development, UI/UX Design"
+                          className="pl-12 h-14 rounded-2xl border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold"
+                          value={formData.expertise}
+                          onChange={handleChange}
+                        />
+                     </div>
+                   </div>
+                   <div className="space-y-3">
+                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-2">Years of Experience</Label>
+                     <div className="relative">
+                        <Rocket className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
+                        <Input 
+                          name="experience"
+                          type="number"
+                          placeholder="0"
+                          className="pl-12 h-14 rounded-2xl border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold"
+                          value={formData.experience}
+                          onChange={handleChange}
+                        />
+                     </div>
+                   </div>
                 </div>
+
+                 {/* Hourly Rate */}
+                 <div className="space-y-3">
+                   <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-2">Hourly Rate (USD)</Label>
+                   <div className="relative">
+                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
+                     <Input
+                       name="hourlyRate"
+                       type="number"
+                       min={0}
+                       placeholder="e.g. 50"
+                       className="pl-12 h-14 rounded-2xl border-border/50 focus:ring-4 focus:ring-primary/10 transition-all text-lg font-bold"
+                       value={formData.hourlyRate}
+                       onChange={handleChange}
+                     />
+                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black uppercase tracking-widest text-muted-foreground/40">
+                       /hr
+                     </span>
+                   </div>
+                   <p className="text-xs text-muted-foreground/60 font-medium ml-2">
+                     Set to 0 for free sessions. Students will be charged this rate per hour.
+                   </p>
+                 </div>
              </CardContent>
           </Card>
         </div>

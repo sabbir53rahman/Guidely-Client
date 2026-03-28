@@ -19,7 +19,6 @@ const mentorRoutes = [
 const adminRoutes = [
   "/admin-dashboard",
   "/manage-users",
-  "/manage-sessions",
   "/payments",
 ];
 const authRoutes = ["/login", "/register"];

@@ -31,11 +31,28 @@ export const bookingApi = baseApi.injectEndpoints({
     }),
 
     updateBookingStatus: builder.mutation({
-      query: ({ id, status, paymentStatus }) => ({
+      query: ({ id, ...data }) => ({
         url: `/bookings/${id}`,
         method: "PATCH",
-        // Optional payload depends on what needs updating
-        body: { status, paymentStatus },
+        body: data,
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+
+    // Cancel a booking (Student / Mentor / Admin)
+    cancelBooking: builder.mutation({
+      query: (id: string) => ({
+        url: `/bookings/cancel/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+
+    // Delete a booking
+    deleteBooking: builder.mutation({
+      query: (id: string) => ({
+        url: `/bookings/${id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Booking"],
     }),
@@ -47,4 +64,6 @@ export const {
   useGetMyBookingsQuery,
   useCreateBookingMutation,
   useUpdateBookingStatusMutation,
+  useCancelBookingMutation,
+  useDeleteBookingMutation,
 } = bookingApi;

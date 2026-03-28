@@ -1,7 +1,9 @@
 "use client";
 
 import { useGetOverviewStatsQuery } from "@/redux/features/meta/metaApi";
+import { format } from "date-fns";
 import { IMentorStats, IBooking } from "@/types";
+
 import {
   Users,
   Calendar,
@@ -187,7 +189,7 @@ export default function MentorDashboardPage() {
                 <tbody>
                   {stats?.upcomingBookings?.map((booking: IBooking) => (
                     <tr
-                      key={booking._id}
+                      key={booking.id || booking._id}
                       className="border-b border-border/30 hover:bg-muted/30 transition-colors group"
                     >
                       <td className="p-6">
@@ -208,17 +210,25 @@ export default function MentorDashboardPage() {
                       <td className="p-6 font-medium text-sm">
                         <div className="flex items-center gap-2">
                           <Briefcase className="h-3.5 w-3.5 text-muted-foreground" />
-                          {booking.topic || "General Session"}
+                          {booking.notes || "General Session"}
                         </div>
                       </td>
                       <td className="p-6">
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-foreground">
-                            {new Date(booking.date).toLocaleDateString()}
+                            {booking.startTime
+                              ? format(new Date(booking.startTime), "MMM dd, yy")
+                              : "N/A"}
                           </span>
                           <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
                             <Clock className="h-2.5 w-2.5" />
-                            {booking.startTime} - {booking.endTime}
+                            {booking.startTime
+                              ? format(new Date(booking.startTime), "HH:mm")
+                              : "N/A"}{" "}
+                            -{" "}
+                            {booking.endTime
+                              ? format(new Date(booking.endTime), "HH:mm")
+                              : "N/A"}
                           </span>
                         </div>
                       </td>
@@ -226,7 +236,7 @@ export default function MentorDashboardPage() {
                         <Badge
                           className={cn(
                             "rounded-lg px-3 py-1 font-black text-[10px] uppercase tracking-wider",
-                            booking.status === "confirmed"
+                            booking.status === "SCHEDULED"
                               ? "bg-emerald-500/10 text-emerald-500"
                               : "bg-amber-500/10 text-amber-500",
                           )}

@@ -1,7 +1,9 @@
 "use client";
 
 import { useGetOverviewStatsQuery } from "@/redux/features/meta/metaApi";
+import { format } from "date-fns";
 import { IStudentStats, IBooking } from "@/types";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BookOpen,
@@ -178,7 +180,7 @@ export default function StudentDashboardPage() {
                 <tbody>
                   {stats?.upcomingBookings?.map((booking: IBooking) => (
                     <tr
-                      key={booking._id}
+                      key={booking.id || booking._id}
                       className="border-b border-border/30 hover:bg-muted/30 transition-colors group"
                     >
                       <td className="p-6">
@@ -208,17 +210,21 @@ export default function StudentDashboardPage() {
                           variant="outline"
                           className="rounded-lg border-primary/20 text-primary font-bold bg-primary/5"
                         >
-                          {booking.topic || "Mentorship"}
+                          {booking.notes || "Mentorship"}
                         </Badge>
                       </td>
                       <td className="p-6">
                         <div className="flex flex-col text-sm">
                           <span className="font-bold text-foreground">
-                            {new Date(booking.date).toLocaleDateString()}
+                            {booking.startTime
+                              ? format(new Date(booking.startTime), "MMM dd, yy")
+                              : "N/A"}
                           </span>
                           <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium italic">
                             <Clock className="h-2.5 w-2.5" />
-                            {booking.startTime}
+                            {booking.startTime
+                              ? format(new Date(booking.startTime), "HH:mm")
+                              : "N/A"}
                           </span>
                         </div>
                       </td>

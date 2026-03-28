@@ -1,7 +1,9 @@
 "use client";
 
 import { useGetOverviewStatsQuery } from "@/redux/features/meta/metaApi";
+import { format } from "date-fns";
 import { IAdminStats, IBooking } from "@/types";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Users,
@@ -175,7 +177,7 @@ export default function AdminDashboardPage() {
               <tbody>
                 {stats?.recentBookings?.map((booking: IBooking) => (
                   <tr
-                    key={booking._id}
+                    key={booking.id || booking._id}
                     className="border-b border-border/30 hover:bg-muted/30 transition-colors group"
                   >
                     <td className="p-6">
@@ -211,11 +213,19 @@ export default function AdminDashboardPage() {
                     <td className="p-6">
                       <div className="flex flex-col">
                         <span className="text-sm font-bold text-foreground">
-                          {new Date(booking.date).toLocaleDateString()}
+                          {booking.startTime
+                            ? format(new Date(booking.startTime), "MMM dd, yy")
+                            : "N/A"}
                         </span>
                         <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
                           <Clock className="h-2.5 w-2.5" />
-                          {booking.startTime} - {booking.endTime}
+                          {booking.startTime
+                            ? format(new Date(booking.startTime), "HH:mm")
+                            : "N/A"}{" "}
+                          -{" "}
+                          {booking.endTime
+                            ? format(new Date(booking.endTime), "HH:mm")
+                            : "N/A"}
                         </span>
                       </div>
                     </td>
@@ -224,9 +234,9 @@ export default function AdminDashboardPage() {
                         variant="secondary"
                         className={cn(
                           "rounded-lg px-3 py-1 font-black text-[10px] uppercase tracking-wider border-none",
-                          booking.status === "confirmed"
+                          booking.status === "SCHEDULED"
                             ? "bg-emerald-500/10 text-emerald-500"
-                            : booking.status === "pending"
+                            : booking.status === "PENDING"
                               ? "bg-amber-500/10 text-amber-500"
                               : "bg-red-500/10 text-red-500",
                         )}
@@ -235,7 +245,7 @@ export default function AdminDashboardPage() {
                       </Badge>
                     </td>
                     <td className="p-6 text-right font-black text-primary">
-                      ${booking.totalAmount}
+                      ${booking.payment?.amount || booking.mentor?.hourlyRate || 0}
                     </td>
                   </tr>
                 ))}

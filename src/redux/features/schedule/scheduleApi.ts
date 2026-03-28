@@ -1,8 +1,9 @@
+import { ApiResponse, Schedule } from "@/types";
 import { baseApi } from "@/redux/baseApi";
 
 export const scheduleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMySchedules: builder.query({
+    getMySchedules: builder.query<ApiResponse<Schedule[]>, undefined>({
       query: () => ({
         url: "/schedules/me",
         method: "GET",
@@ -10,7 +11,15 @@ export const scheduleApi = baseApi.injectEndpoints({
       providesTags: ["Schedule"],
     }),
 
-    createSchedule: builder.mutation({
+    getAllSchedules: builder.query<ApiResponse<Schedule[]>, undefined>({
+      query: () => ({
+        url: "/schedules",
+        method: "GET",
+      }),
+      providesTags: ["Schedule"],
+    }),
+
+    createSchedule: builder.mutation<ApiResponse<Schedule>, Partial<Schedule>>({
       query: (scheduleData) => ({
         url: "/schedules",
         method: "POST",
@@ -20,7 +29,7 @@ export const scheduleApi = baseApi.injectEndpoints({
       invalidatesTags: ["Schedule"],
     }),
 
-    updateSchedule: builder.mutation({
+    updateSchedule: builder.mutation<ApiResponse<Schedule>, Partial<Schedule> & { id: string }>({
       query: ({ id, ...data }) => ({
         url: `/schedules/${id}`,
         method: "PATCH",
@@ -29,7 +38,7 @@ export const scheduleApi = baseApi.injectEndpoints({
       invalidatesTags: ["Schedule"],
     }),
 
-    deleteSchedule: builder.mutation({
+    deleteSchedule: builder.mutation<ApiResponse<void>, string>({
       query: (id) => ({
         url: `/schedules/${id}`,
         method: "DELETE",
@@ -41,6 +50,7 @@ export const scheduleApi = baseApi.injectEndpoints({
 
 export const {
   useGetMySchedulesQuery,
+  useGetAllSchedulesQuery,
   useCreateScheduleMutation,
   useUpdateScheduleMutation,
   useDeleteScheduleMutation,

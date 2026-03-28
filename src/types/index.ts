@@ -8,6 +8,7 @@ export interface User {
   role: string | UserRole;
   avatar?: string | null;
   image?: string | null;
+  profilePhoto?: string | null;
   isVerified?: boolean;
   status?: string;
   createdAt: string;
@@ -40,6 +41,7 @@ export interface Mentor {
   address?: string | null;
   registrationNumber?: string | null;
   experience: number;
+  hourlyRate: number;
   bio?: string | null;
   expertise?: string | null;
   averageRating: number;
@@ -52,9 +54,23 @@ export interface Mentor {
 
 // ─── Availability ─────────────────────────────────────────────────────────────
 export interface TimeSlot {
+  id?: string;
+  _id?: string;
   startTime: string;
   endTime: string;
   isBooked: boolean;
+}
+
+export interface Schedule {
+  id: string;
+  _id?: string;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  isBooked: boolean;
+  slots?: TimeSlot[];
+  mentorId?: string;
+  mentor?: Mentor;
 }
 
 export interface AvailabilityDay {
@@ -63,24 +79,41 @@ export interface AvailabilityDay {
 }
 
 // ─── Booking / Session ───────────────────────────────────────────────────────
-export type SessionStatus = "pending" | "confirmed" | "completed" | "cancelled";
+export type SessionStatus =
+  | "PENDING"
+  | "SCHEDULED"
+  | "INPROGRESS"
+  | "COMPLETED"
+  | "CANCELED";
+export type PaymentStatus = "PAID" | "UNPAID";
+
 
 export interface Session {
-  _id: string;
+  id: string;
+  _id?: string;
+  mentorId: string;
+  studentId: string;
   mentor: Mentor;
   student: User;
-  date: string;
   startTime: string;
   endTime: string;
   status: SessionStatus;
-  topic: string;
+  paymentStatus: PaymentStatus;
   notes?: string;
   meetingLink?: string;
-  totalAmount: number;
-  isPaid: boolean;
+  payment?: {
+    id: string;
+    amount: number;
+    transactionId: string;
+    status: PaymentStatus;
+  };
+  totalAmount?: number; // Keep for compatibility
+  isPaid?: boolean; // Keep for compatibility
   review?: Review;
   createdAt: string;
+  updatedAt: string;
 }
+
 
 export type IBooking = Session;
 
