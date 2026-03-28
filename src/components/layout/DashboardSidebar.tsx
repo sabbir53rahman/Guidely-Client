@@ -53,7 +53,7 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
     { label: "Dashboard", href: "/student-dashboard", icon: LayoutDashboard },
     { label: "Book a Session", href: "/book-session", icon: Calendar },
     { label: "My Learning", href: "/session-history", icon: BookOpen },
-    { label: "Reviews", href: "/review", icon: Star },
+    { label: "Reviews", href: "/my-reviews", icon: Star },
     { label: "My Profile", href: "/profile", icon: UserCircle },
     { label: "Settings", href: "/settings", icon: Settings },
   ],

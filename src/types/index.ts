@@ -23,10 +23,17 @@ export interface AuthState {
 
 // ─── Mentor ───────────────────────────────────────────────────────────────────
 export interface Review {
-  _id: string;
-  student: Pick<User, "id" | "name" | "avatar">;
+  id: string;
+  _id?: string;
+  student?: Pick<User, "id" | "name" | "avatar" | "profilePhoto">;
+  mentor?: {
+    id: string;
+    name: string;
+    profilePhoto: string | null;
+    expertise: string | null;
+  };
   rating: number;
-  comment: string;
+  comment: string | null;
   createdAt: string;
 }
 

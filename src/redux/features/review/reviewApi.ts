@@ -8,13 +8,25 @@ export const reviewApi = baseApi.injectEndpoints({
         method: "POST",
         body: reviewData,
       }),
-      invalidatesTags: ["Review", "Mentor"], // Re-fetch reviews and mentor (for updated rating)
+      invalidatesTags: ["Review", "Mentor", "Booking"], // Re-fetch reviews, mentor, and bookings for status updates
     }),
     getMentorReviews: builder.query({
       query: (mentorId) => `/reviews/mentor/${mentorId}`,
       providesTags: ["Review"],
     }),
+    getMyReviews: builder.query({
+      query: (params) => ({
+        url: "/reviews/me",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Review"],
+    }),
   }),
 });
 
-export const { useCreateReviewMutation, useGetMentorReviewsQuery } = reviewApi;
+export const { 
+  useCreateReviewMutation, 
+  useGetMentorReviewsQuery, 
+  useGetMyReviewsQuery 
+} = reviewApi;
