@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { ThemeToggle } from "./ThemeToggle";
 import { Search, Bell, Menu } from "lucide-react";
@@ -11,7 +12,24 @@ import { useAppSelector } from "@/hooks/useRedux";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const user = useAppSelector((state) => state.auth.user);
+  const { user, isLoading } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  useEffect(() => {
+    // ONLY redirect if we are CERTAIN there is no user AND auth initialization is finished
+    if (!user && !isLoading) {
+      router.push("/");
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading) {
+     return (
+       <div className="h-screen flex flex-col items-center justify-center space-y-4">
+         <div className="h-10 w-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+         <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Synchronizing Session...</p>
+       </div>
+     );
+  }
 
   return (
     <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -49,13 +67,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </Sheet>
             </div>
 
-            <div className="relative max-w-md w-full hidden md:block group">
+            {/* <div className="relative max-w-md w-full hidden md:block group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
                 placeholder="Search sessions, users, or settings..."
                 className="pl-12 h-11 rounded-full bg-accent/50 border-transparent focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-none transition-all"
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center gap-3 md:gap-4">

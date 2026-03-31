@@ -105,8 +105,13 @@ export function middleware(request: NextRequest) {
       if (
         mentorRoutes.some((r) => pathname.startsWith(r)) &&
         role !== "mentor" &&
-        role !== "admin" && role !== "super_admin"
+        role !== "admin" &&
+        role !== "super_admin"
       ) {
+        // Exception: allow student to access /profile to CREATE a mentor profile
+        if (pathname === "/profile" && role === "student") {
+           return NextResponse.next();
+        }
         return NextResponse.redirect(new URL("/", request.url));
       }
     } catch {

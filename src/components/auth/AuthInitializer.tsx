@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAppDispatch } from "@/hooks/useRedux";
-import { setCredentials } from "@/redux/features/auth/authSlice";
+import { setCredentials, setLoading } from "@/redux/features/auth/authSlice";
 
 export default function AuthInitializer({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -17,6 +17,8 @@ export default function AuthInitializer({ children }: { children: React.ReactNod
     const token = getCookie("token");
     if (token) {
       dispatch(setCredentials({ user: null, accessToken: token }));
+    } else {
+      dispatch(setLoading(false));
     }
   }, [dispatch]);
 

@@ -24,9 +24,10 @@ import { useCancelBookingMutation } from "@/redux/features/booking/bookingApi";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { IBooking, ApiResponse } from "@/types";
+import { IBooking } from "@/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Pagination } from "@/components/shared/Pagination";
 
 // ── Inline confirmation dialog ──────────────────────────────────────────────
 function ConfirmDeleteDialog({
@@ -112,8 +113,10 @@ function ConfirmDeleteDialog({
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 export default function SessionHistoryPage() {
+  const [page, setPage] = useState(1);
+  const limit = 10;
   const { data: bookingsResponse, isLoading: isBookingsLoading } =
-    useGetMyBookingsQuery(undefined);
+    useGetMyBookingsQuery({ page, limit });
   const [createCheckout, { isLoading: isCheckingOut }] =
     useCreateCheckoutSessionMutation();
   const [cancelBooking, { isLoading: isCancelling }] =
@@ -125,6 +128,9 @@ export default function SessionHistoryPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+    null,
+  );
 
   const handlePayment = useCallback(
     async (bookingId: string) => {
@@ -305,6 +311,7 @@ export default function SessionHistoryPage() {
                     id: row.mentor.id,
                     name: row.mentor.name,
                   });
+                  setSelectedBookingId(row.id);
                   setReviewModalOpen(true);
                 }}
                 disabled={!!row.review}
@@ -393,8 +400,8 @@ export default function SessionHistoryPage() {
     [isCheckingOut, handlePayment, isCancelling, pendingDeleteId],
   );
 
-  const bookings: IBooking[] =
-    (bookingsResponse as unknown as ApiResponse<IBooking[]>)?.data || [];
+  const bookings: IBooking[] = bookingsResponse?.data || [];
+  const meta = bookingsResponse?.meta;
 
   return (
     <>
@@ -405,15 +412,17 @@ export default function SessionHistoryPage() {
         isLoading={isCancelling}
       />
 
-      {selectedMentor && (
+      {selectedMentor && selectedBookingId && (
         <ReviewModal
           open={reviewModalOpen}
           onClose={() => {
             setReviewModalOpen(false);
             setSelectedMentor(null);
+            setSelectedBookingId(null);
           }}
           mentorId={selectedMentor.id}
           mentorName={selectedMentor.name}
+          bookingId={selectedBookingId}
         />
       )}
 
@@ -456,6 +465,18 @@ export default function SessionHistoryPage() {
             isLoading={isBookingsLoading}
             emptyMessage="You haven't booked any sessions yet. Discover mentors to spark your learning journey."
           />
+
+          {/* Pagination */}
+          {!isBookingsLoading && bookings.length > 0 && meta && (
+            <Pagination
+              currentPage={page}
+              totalPages={meta.totalPages}
+              onPageChange={(newPage) => {
+                setPage(newPage);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          )}
         </section>
       </div>
     </>

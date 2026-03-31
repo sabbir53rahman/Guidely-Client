@@ -13,9 +13,10 @@ interface ReviewModalProps {
   onClose: () => void;
   mentorId: string;
   mentorName: string;
+  bookingId: string;
 }
 
-export function ReviewModal({ open, onClose, mentorId, mentorName }: ReviewModalProps) {
+export function ReviewModal({ open, onClose, mentorId, mentorName, bookingId }: ReviewModalProps) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -33,6 +34,7 @@ export function ReviewModal({ open, onClose, mentorId, mentorName }: ReviewModal
     try {
       await createReview({
         mentorId,
+        bookingId,
         rating,
         comment,
       }).unwrap();

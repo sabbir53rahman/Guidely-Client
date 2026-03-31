@@ -6,7 +6,7 @@ const initialState: AuthState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true, // Start in initialization state
 };
 
 interface JWTPayload {
@@ -32,6 +32,7 @@ const authSlice = createSlice({
       const { user, accessToken } = action.payload;
       state.token = accessToken;
       state.isAuthenticated = true;
+      state.isLoading = false;
 
       if (user) {
         state.user = user;
@@ -56,6 +57,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.isLoading = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

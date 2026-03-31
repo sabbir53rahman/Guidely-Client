@@ -2,30 +2,26 @@ import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Hero } from "@/components/landing/Hero";
-import { Stats } from "@/components/landing/Stats";
-import { Features } from "@/components/landing/Features";
 import { TopMentors } from "@/components/landing/TopMentors";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { FinalCTA } from "@/components/landing/FinalCTA";
 import { HowItWorks } from "@/components/landing/HowItWorks";
+import { VideoMeetings } from "@/components/landing/VideoMeetings";
+import { FinalCTA } from "@/components/landing/FinalCTA";
 
 export const metadata: Metadata = {
-  title: "Guidely — Premium Mentor Management System",
+  title: "MentorFlow — Learn Without Limits",
   description:
-    "The complete platform to manage, grow, and scale your mentorship programs. Scheduling, payments, and analytics in one place.",
+    "Connect with expert mentors and transform your career. Learn programming, business, design, and marketing from industry leaders.",
 };
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-slate-950 transition-colors duration-300 overflow-x-hidden">
+    <div className="flex min-h-screen flex-col bg-background transition-colors duration-300">
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <Stats />
         <TopMentors />
         <HowItWorks />
-        <Features />
-        <Testimonials />
+        <VideoMeetings />
         <FinalCTA />
       </main>
       <Footer />

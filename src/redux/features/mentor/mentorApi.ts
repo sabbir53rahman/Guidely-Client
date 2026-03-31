@@ -3,20 +3,32 @@ import type {
   ApiResponse,
   Mentor,
   PaginatedResponse,
-  MentorQueryParams,
   AvailabilityDay,
 } from "@/types";
 
 const mentorApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Public
-    getAllMentors: builder.query<PaginatedResponse<Mentor>, MentorQueryParams>({
-      query: (params = {}) => ({
+    getAllMentors: builder.query<
+      PaginatedResponse<Mentor>,
+      {
+        page?: number;
+        limit?: number;
+        searchTerm?: string;
+        expertise?: string;
+        isAvailable?: boolean;
+        experience?: number;
+        sortBy?: string;
+        sortOrder?: string;
+      } | void
+    >({
+      query: (params) => ({
         url: "/mentors",
-        params,
+        params: params || undefined,
       }),
       providesTags: ["Mentor"],
     }),
+
     getMentorById: builder.query<ApiResponse<Mentor>, string>({
       query: (id) => `/mentors/${id}`,
       providesTags: (_result, _err, id) => [{ type: "Mentor", id }],
@@ -33,6 +45,7 @@ const mentorApi = baseApi.injectEndpoints({
         invalidatesTags: ["Mentor"],
       },
     ),
+
     updateMentorProfile: builder.mutation<
       ApiResponse<Mentor>,
       { id: string; data: Partial<Mentor> }
@@ -42,14 +55,19 @@ const mentorApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (_result, _err, { id }) => [{ type: "Mentor", id }],
+      invalidatesTags: (_result, _err, { id }) => [
+        { type: "Mentor", id },
+        "Mentor",
+      ],
     }),
+
     getMentorAvailability: builder.query<
       ApiResponse<AvailabilityDay[]>,
       string
     >({
       query: (mentorId) => `/mentors/${mentorId}/availability`,
     }),
+
     setMentorAvailability: builder.mutation<
       ApiResponse<AvailabilityDay[]>,
       AvailabilityDay[]
@@ -60,6 +78,7 @@ const mentorApi = baseApi.injectEndpoints({
         body: { availability: data },
       }),
     }),
+
     getMyMentorProfile: builder.query<ApiResponse<Mentor>, void>({
       query: () => "/mentors/me",
       providesTags: ["Mentor"],

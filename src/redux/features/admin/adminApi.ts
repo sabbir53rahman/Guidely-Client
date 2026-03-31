@@ -1,18 +1,29 @@
 import { baseApi } from "@/redux/baseApi";
-import type { ApiResponse, PaginatedResponse, User, IAdminStats } from "@/types";
+import type {
+  ApiResponse,
+  PaginatedResponse,
+  User,
+  IAdminStats,
+} from "@/types";
 
 const adminApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAdminStats: builder.query<ApiResponse<IAdminStats>, void>({
-      query: () => "/admin/stats",
+      query: () => "/admins/stats",
       providesTags: ["Admin"],
     }),
     getAllUsers: builder.query<
       PaginatedResponse<User>,
-      { page?: number; limit?: number; role?: string; search?: string }
+      {
+        page?: number;
+        limit?: number;
+        role?: string;
+        search?: string;
+        status?: string;
+      }
     >({
       query: (params = {}) => ({
-        url: "/admin/users",
+        url: "/admins/users",
         params,
       }),
       providesTags: ["User"],
@@ -21,23 +32,23 @@ const adminApi = baseApi.injectEndpoints({
       ApiResponse<User>,
       { userId: string; role: string }
     >({
-      query: ({ userId, ...data }) => ({
-        url: `/admin/users/${userId}/role`,
+      query: ({ userId, role }) => ({
+        url: `/admins/users/${userId}/role`,
         method: "PATCH",
-        body: data,
+        body: { role },
       }),
       invalidatesTags: ["User"],
     }),
     toggleUserStatus: builder.mutation<ApiResponse<User>, string>({
       query: (userId) => ({
-        url: `/admin/users/${userId}/toggle-status`,
+        url: `/admins/users/${userId}/toggle-status`,
         method: "PATCH",
       }),
       invalidatesTags: ["User"],
     }),
     deleteUser: builder.mutation<ApiResponse<null>, string>({
       query: (userId) => ({
-        url: `/admin/users/${userId}`,
+        url: `/admins/users/${userId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["User"],
@@ -45,7 +56,11 @@ const adminApi = baseApi.injectEndpoints({
     getPaymentsOverview: builder.query<
       ApiResponse<{
         totalRevenue: number;
-        monthlyRevenue: number[];
+        monthlyRevenue: {
+          month: string;
+          year: number;
+          revenue: number;
+        }[];
         recentTransactions: {
           id: string;
           amount: number;
@@ -56,7 +71,7 @@ const adminApi = baseApi.injectEndpoints({
       }>,
       void
     >({
-      query: () => "/admin/payments",
+      query: () => "/admins/payments",
     }),
   }),
 });

@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/baseApi";
+import { PaginatedResponse, Review } from "@/types";
 
 export const reviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,11 +11,11 @@ export const reviewApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Review", "Mentor", "Booking"], // Re-fetch reviews, mentor, and bookings for status updates
     }),
-    getMentorReviews: builder.query({
+    getMentorReviews: builder.query<PaginatedResponse<Review>, string>({
       query: (mentorId) => `/reviews/mentor/${mentorId}`,
       providesTags: ["Review"],
     }),
-    getMyReviews: builder.query({
+    getMyReviews: builder.query<PaginatedResponse<Review>, { page?: number; limit?: number }>({
       query: (params) => ({
         url: "/reviews/me",
         method: "GET",

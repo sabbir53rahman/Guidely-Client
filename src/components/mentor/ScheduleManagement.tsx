@@ -12,7 +12,7 @@ import {
   ChevronRight,
   Trash,
   Loader2,
-  Calendar as CalendarIcon,
+  // Calendar as CalendarIcon,
   Clock,
   ShieldCheck,
   History,
@@ -32,14 +32,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+// import { Calendar } from "@/components/ui/calendar";
+// import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Schedule, TimeSlot } from "@/types";
 
 export function ScheduleManagement() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const { data: schedules, isLoading: isFetching } =
-    useGetMySchedulesQuery(undefined);
+  const { data: schedules, isLoading: isFetching } = useGetMySchedulesQuery();
   const [createSchedule, { isLoading: isCreating }] =
     useCreateScheduleMutation();
   const [deleteSchedule] = useDeleteScheduleMutation();
@@ -101,7 +100,7 @@ export function ScheduleManagement() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* --- HEADER SECTION --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
@@ -224,7 +223,7 @@ export function ScheduleManagement() {
               </div>
             </div>
 
-            <Popover>
+            {/* <Popover>
               <PopoverTrigger>
                 <Button
                   variant="ghost"
@@ -246,7 +245,7 @@ export function ScheduleManagement() {
                   className="p-3"
                 />
               </PopoverContent>
-            </Popover>
+            </Popover> */}
           </div>
 
           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide px-2 -mx-2">

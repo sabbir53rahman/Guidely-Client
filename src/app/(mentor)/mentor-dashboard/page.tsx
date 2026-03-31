@@ -8,18 +8,18 @@ import {
   Users,
   Calendar,
   Clock,
-  MoreHorizontal,
+  Video,
   ArrowUpRight,
   ShieldCheck,
   Star as StarIcon,
   DollarSign,
-  Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function MentorDashboardPage() {
   const { data, isLoading } = useGetOverviewStatsQuery();
@@ -98,181 +98,205 @@ export default function MentorDashboardPage() {
           </p>
         </div>
         <div className="flex gap-4">
-          <Button
-            variant="outline"
-            className="rounded-2xl h-12 px-6 font-bold shadow-sm"
-          >
-            View Schedule
-          </Button>
-          <Button className="rounded-2xl h-12 px-6 font-black bg-primary shadow-lg shadow-primary/20">
-            Create Time Slot
-          </Button>
+          <Link href="/availability">
+            <Button
+              variant="outline"
+              className="rounded-2xl h-12 px-6 font-bold shadow-sm"
+            >
+              View Schedule
+            </Button>
+          </Link>
+          <Link href="/availability">
+            <Button className="rounded-2xl h-12 px-6 font-black bg-primary shadow-lg shadow-primary/20">
+              Create Time Slot
+            </Button>
+          </Link>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {STAT_CONFIG.map((stat) => (
-          <Card
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {STAT_CONFIG.map((stat, index) => (
+          <div
             key={stat.label}
-            className="rounded-[2.5rem] border-none shadow-premium hover:shadow-hover transition-all duration-300 overflow-hidden group bg-white/50 backdrop-blur-sm"
+            className="group relative bg-card rounded-2xl border border-border p-5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
+            {/* Gradient Border Effect */}
+            <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
                 <div
                   className={cn(
-                    "p-3 rounded-2xl transition-transform group-hover:scale-110 duration-500",
+                    "p-3 rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3",
                     stat.bg,
-                    stat.color,
                   )}
                 >
-                  <stat.icon className="h-6 w-6" />
+                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
                 </div>
-                <div
-                  className={cn(
-                    "flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full",
-                    "bg-emerald-500/10 text-emerald-500",
-                  )}
-                >
-                  <ArrowUpRight className="h-3 w-3" />
-                  {stat.trend}
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10">
+                  <ArrowUpRight className="h-3 w-3 text-emerald-500" />
+                  <span className="text-xs font-bold text-emerald-500">
+                    {stat.trend}
+                  </span>
                 </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-sm font-black text-muted-foreground uppercase tracking-wider">
+
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {stat.label}
                 </p>
-                <p className="text-3xl font-black text-foreground tracking-tight">
-                  {stat.value}
-                </p>
+                <div className="flex items-baseline gap-1">
+                  <p className="text-2xl font-black text-foreground tracking-tight group-hover:scale-105 transition-transform duration-300">
+                    {stat.value}
+                  </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Progress Indicator */}
+              <div className="mt-3 h-1 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-linear-to-r from-primary to-secondary rounded-full transition-all duration-700 ease-out"
+                  style={{
+                    width: `${70 + index * 5}%`,
+                    animationDelay: `${index * 100 + 200}ms`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Upcoming Sessions Table */}
-        <Card className="lg:col-span-2 rounded-[3rem] border-none shadow-premium overflow-hidden bg-white/50 backdrop-blur-sm">
-          <CardHeader className="p-10 border-b border-border/50 flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl font-black">
-                Upcoming Sessions
-              </CardTitle>
-              <p className="text-sm text-muted-foreground font-medium mt-1">
-                Manage your next interactions with students
-              </p>
+        <div className="lg:col-span-2 bg-card rounded-2xl border border-border shadow-lg overflow-hidden">
+          <div className="bg-linear-to-r from-primary/5 to-secondary/5 border-b border-border/20 p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">
+                    Upcoming Sessions
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Prepare for your next mentorship meetings
+                  </p>
+                </div>
+              </div>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-xl">
-              <MoreHorizontal className="h-5 w-5" />
-            </Button>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-border/50">
-                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      Student
-                    </th>
-                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      Topic
-                    </th>
-                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      Time
-                    </th>
-                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right px-10">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats?.upcomingBookings?.map((booking: IBooking) => (
-                    <tr
-                      key={booking.id || booking._id}
-                      className="border-b border-border/30 hover:bg-muted/30 transition-colors group"
-                    >
-                      <td className="p-6">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-10 w-10 border-2 border-primary/10">
-                            <AvatarImage src={booking.student?.avatar || ""} />
-                            <AvatarFallback className="font-black bg-primary/5 text-primary text-xs">
-                              {booking.student?.name
-                                ?.substring(0, 2)
-                                .toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-bold text-foreground">
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border/20">
+                  <th className="p-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Student
+                  </th>
+                  <th className="p-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Topic
+                  </th>
+                  <th className="p-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Time
+                  </th>
+                  <th className="p-4 text-right text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats?.upcomingBookings?.map((booking: IBooking) => (
+                  <tr
+                    key={booking.id || booking._id}
+                    className="border-b border-border/10 hover:bg-muted/30 transition-colors"
+                  >
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10 border border-primary/20">
+                          <AvatarImage src={booking.student?.avatar || ""} />
+                          <AvatarFallback className="font-bold bg-primary/10 text-primary text-xs">
+                            {booking.student?.name
+                              ?.substring(0, 2)
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-foreground">
                             {booking.student?.name}
                           </span>
-                        </div>
-                      </td>
-                      <td className="p-6 font-medium text-sm">
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="h-3.5 w-3.5 text-muted-foreground" />
-                          {booking.notes || "General Session"}
-                        </div>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-foreground">
-                            {booking.startTime
-                              ? format(new Date(booking.startTime), "MMM dd, yy")
-                              : "N/A"}
-                          </span>
-                          <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
-                            <Clock className="h-2.5 w-2.5" />
-                            {booking.startTime
-                              ? format(new Date(booking.startTime), "HH:mm")
-                              : "N/A"}{" "}
-                            -{" "}
-                            {booking.endTime
-                              ? format(new Date(booking.endTime), "HH:mm")
-                              : "N/A"}
+                          <span className="text-xs text-muted-foreground">
+                            Student
                           </span>
                         </div>
-                      </td>
-                      <td className="p-6 text-right px-10">
-                        <Badge
-                          className={cn(
-                            "rounded-lg px-3 py-1 font-black text-[10px] uppercase tracking-wider",
-                            booking.status === "SCHEDULED"
-                              ? "bg-emerald-500/10 text-emerald-500"
-                              : "bg-amber-500/10 text-amber-500",
-                          )}
-                          variant="secondary"
-                        >
-                          {booking.status}
-                        </Badge>
-                      </td>
-                    </tr>
-                  ))}
-                  {(!stats?.upcomingBookings ||
-                    stats.upcomingBookings.length === 0) && (
-                    <tr>
-                      <td colSpan={4} className="p-20 text-center">
-                        <div className="inline-flex p-6 rounded-full bg-muted/50 mb-4">
-                          <Calendar className="h-10 w-10 text-muted-foreground" />
-                        </div>
-                        <p className="text-muted-foreground font-bold">
-                          No upcoming sessions
-                        </p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="p-6 bg-muted/20 text-center border-t border-border/50">
-              <Button
-                variant="link"
-                className="font-black text-primary uppercase tracking-widest text-[10px]"
-              >
-                View All Sessions
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <Badge
+                        variant="outline"
+                        className="rounded-lg border-primary/20 text-primary bg-primary/5"
+                      >
+                        {booking.notes || "Mentorship"}
+                      </Badge>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex flex-col text-sm">
+                        <span className="font-medium text-foreground">
+                          {booking.startTime
+                            ? format(
+                                new Date(booking.startTime),
+                                "MMM dd, yyyy",
+                              )
+                            : "N/A"}
+                        </span>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {booking.startTime
+                            ? format(new Date(booking.startTime), "HH:mm")
+                            : "N/A"}
+                          -{" "}
+                          {booking.endTime
+                            ? format(new Date(booking.endTime), "HH:mm")
+                            : "N/A"}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-4 text-right">
+                      <Button
+                        disabled={!booking.meetingLink}
+                        onClick={() => {
+                          if (booking.meetingLink) {
+                            window.open(booking.meetingLink, "_blank");
+                          }
+                        }}
+                        className="h-9 px-4 rounded-lg font-medium bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all gap-2"
+                      >
+                        <Video className="h-4 w-4" />
+                        Join
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+                {(!stats?.upcomingBookings ||
+                  stats.upcomingBookings.length === 0) && (
+                  <tr>
+                    <td colSpan={4} className="p-12 text-center">
+                      <div className="inline-flex p-4 rounded-full bg-muted/50 mb-4">
+                        <Calendar className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <p className="text-muted-foreground font-medium">
+                        No upcoming sessions found
+                      </p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* Sidebar Mini-Card (Quick Information) */}
         <div className="space-y-8">

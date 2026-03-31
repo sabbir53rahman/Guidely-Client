@@ -54,7 +54,7 @@ export default function RootLayout({
       className={`${inter.variable} ${plusJakartaSans.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased bg-background text-foreground min-h-screen">
+      <body className="font-sans antialiased bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

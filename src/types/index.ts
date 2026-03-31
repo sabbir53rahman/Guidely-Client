@@ -162,10 +162,12 @@ export interface PaginatedResponse<T> {
   success: boolean;
   message: string;
   data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 // ─── Query Params ─────────────────────────────────────────────────────────────

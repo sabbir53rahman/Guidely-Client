@@ -1,25 +1,51 @@
-import { ApiResponse, Schedule } from "@/types";
+import { ApiResponse, PaginatedResponse, Schedule } from "@/types";
 import { baseApi } from "@/redux/baseApi";
 
 export const scheduleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMySchedules: builder.query<ApiResponse<Schedule[]>, undefined>({
-      query: () => ({
+    getMySchedules: builder.query<
+      PaginatedResponse<Schedule>,
+      {
+        page?: number;
+        limit?: number;
+        searchTerm?: string;
+        dayOfWeek?: string;
+        sortBy?: string;
+        sortOrder?: string;
+      } | void
+    >({
+      query: (params) => ({
         url: "/schedules/me",
         method: "GET",
+        params: params || {},
       }),
       providesTags: ["Schedule"],
     }),
 
-    getAllSchedules: builder.query<ApiResponse<Schedule[]>, undefined>({
-      query: () => ({
+    getAllSchedules: builder.query<
+      PaginatedResponse<Schedule>,
+      {
+        page?: number;
+        limit?: number;
+        searchTerm?: string;
+        dayOfWeek?: string;
+        mentorId?: string;
+        sortBy?: string;
+        sortOrder?: string;
+      } | void
+    >({
+      query: (params) => ({
         url: "/schedules",
         method: "GET",
+        params: params || {},
       }),
       providesTags: ["Schedule"],
     }),
 
-    createSchedule: builder.mutation<ApiResponse<Schedule>, Partial<Schedule>>({
+    createSchedule: builder.mutation<
+      ApiResponse<Schedule>,
+      { dayOfWeek: string; startTime: string; endTime: string }
+    >({
       query: (scheduleData) => ({
         url: "/schedules",
         method: "POST",
@@ -29,7 +55,10 @@ export const scheduleApi = baseApi.injectEndpoints({
       invalidatesTags: ["Schedule"],
     }),
 
-    updateSchedule: builder.mutation<ApiResponse<Schedule>, Partial<Schedule> & { id: string }>({
+    updateSchedule: builder.mutation<
+      ApiResponse<Schedule>,
+      { id: string; dayOfWeek?: string; startTime?: string; endTime?: string }
+    >({
       query: ({ id, ...data }) => ({
         url: `/schedules/${id}`,
         method: "PATCH",

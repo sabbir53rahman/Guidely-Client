@@ -164,7 +164,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-2 gap-4">
         <Button
           variant="outline"
           className="h-14 rounded-2xl border-border bg-background hover:bg-muted/50 font-bold gap-3 transition-all"
@@ -179,7 +179,7 @@ export default function LoginForm() {
           <Github className="h-5 w-5" />
           GitHub
         </Button>
-      </div>
+      </div> */}
 
       <p className="text-center text-muted-foreground font-medium">
         Don&apos;t have an account?{" "}

@@ -22,13 +22,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   useRegisterStudentMutation,
   useRegisterMentorMutation,
 } from "@/redux/features/auth/authApi";
@@ -152,55 +145,121 @@ export default function RegisterForm() {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="role"
-              className="text-sm font-bold uppercase tracking-wider text-muted-foreground"
-            >
+          <div className="space-y-3">
+            <Label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
               I want to join as...
             </Label>
             <Controller
               name="role"
               control={control}
               render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="h-14 rounded-2xl bg-muted/50 border-border focus:ring-primary focus:border-primary pl-4 transition-all text-base font-medium">
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-border shadow-2xl p-2">
-                    <SelectItem
-                      value="student"
-                      className="rounded-xl py-3 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <GraduationCap className="h-5 w-5 text-primary" />
-                        <div>
-                          <div className="font-bold">Student</div>
-                          <div className="text-xs text-muted-foreground font-medium">
-                            I want to learn from experts
-                          </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => field.onChange("student")}
+                    className={`relative group p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+                      field.value === "student"
+                        ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
+                        : "border-border bg-muted/30 hover:border-primary/50 hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="flex flex-col items-center text-center gap-3">
+                      <div
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                          field.value === "student"
+                            ? "bg-primary text-primary-foreground scale-110"
+                            : "bg-muted text-muted-foreground group-hover:scale-105"
+                        }`}
+                      >
+                        <GraduationCap className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <div
+                          className={`font-bold text-lg ${
+                            field.value === "student"
+                              ? "text-primary"
+                              : "text-foreground"
+                          }`}
+                        >
+                          Student
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Learn from experts
                         </div>
                       </div>
-                    </SelectItem>
-                    <SelectItem
-                      value="mentor"
-                      className="rounded-xl py-3 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Briefcase className="h-5 w-5 text-secondary" />
-                        <div>
-                          <div className="font-bold">Mentor</div>
-                          <div className="text-xs text-muted-foreground font-medium">
-                            I want to share my knowledge
-                          </div>
+                    </div>
+                    {field.value === "student" && (
+                      <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                        <svg
+                          className="w-3 h-3 text-primary-foreground"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => field.onChange("mentor")}
+                    className={`relative group p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
+                      field.value === "mentor"
+                        ? "border-secondary bg-secondary/5 shadow-lg shadow-secondary/10"
+                        : "border-border bg-muted/30 hover:border-secondary/50 hover:bg-muted/50"
+                    }`}
+                  >
+                    <div className="flex flex-col items-center text-center gap-3">
+                      <div
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                          field.value === "mentor"
+                            ? "bg-secondary text-secondary-foreground scale-110"
+                            : "bg-muted text-muted-foreground group-hover:scale-105"
+                        }`}
+                      >
+                        <Briefcase className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <div
+                          className={`font-bold text-lg ${
+                            field.value === "mentor"
+                              ? "text-secondary"
+                              : "text-foreground"
+                          }`}
+                        >
+                          Mentor
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Share your knowledge
                         </div>
                       </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                    </div>
+                    {field.value === "mentor" && (
+                      <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-secondary flex items-center justify-center">
+                        <svg
+                          className="w-3 h-3 text-secondary-foreground"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                </div>
               )}
             />
             {errors.role && (

@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import {
   History,
-  ExternalLink,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -14,14 +13,17 @@ import {
   X,
 } from "lucide-react";
 
-
-import { useGetMyBookingsQuery, useUpdateBookingStatusMutation } from "@/redux/features/booking/bookingApi";
+import {
+  useGetMyBookingsQuery,
+  useUpdateBookingStatusMutation,
+} from "@/redux/features/booking/bookingApi";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { IBooking, ApiResponse } from "@/types";
+import { IBooking } from "@/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Pagination } from "@/components/shared/Pagination";
 import { Input } from "@/components/ui/input";
 
 // ── Meeting Link Dialog ─────────────────────────────────────────────────────
@@ -44,16 +46,26 @@ function UpdateLinkDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative z-10 w-full max-w-md mx-4 rounded-3xl bg-card border border-border shadow-2xl p-8 animate-in fade-in zoom-in-95 duration-200">
-        <button onClick={onClose} className="absolute top-5 right-5 h-8 w-8 rounded-xl bg-muted hover:bg-destructive/10 hover:text-destructive flex items-center justify-center transition-colors">
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 h-8 w-8 rounded-xl bg-muted hover:bg-destructive/10 hover:text-destructive flex items-center justify-center transition-colors"
+        >
           <X className="h-4 w-4" />
         </button>
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <h3 className="text-xl font-black tracking-tight text-foreground">Set Meeting Link</h3>
-            <p className="text-muted-foreground text-sm font-medium">Provide a Jitsi, Zoom, or Google Meet URL for this session.</p>
+            <h3 className="text-xl font-black tracking-tight text-foreground">
+              Set Meeting Link
+            </h3>
+            <p className="text-muted-foreground text-sm font-medium">
+              Provide a Jitsi, Zoom, or Google Meet URL for this session.
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -93,40 +105,50 @@ function UpdateLinkDialog({
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 export default function ManageSessionsPage() {
-  const { data: bookingsResponse, isLoading: isBookingsLoading } = useGetMyBookingsQuery(undefined);
-  const [updateStatus, { isLoading: isUpdating }] = useUpdateBookingStatusMutation();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data: bookingsResponse, isLoading: isBookingsLoading } =
+    useGetMyBookingsQuery({ page, limit });
+  const [updateStatus, { isLoading: isUpdating }] =
+    useUpdateBookingStatusMutation();
 
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
 
-  const handleUpdateLink = useCallback(async (link: string) => {
-    if (!selectedBooking) return;
-    try {
-      // Assuming the API can handle meetingLink in the patch body
-      await updateStatus({
-        id: selectedBooking.id,
-        // Using any cast here if IBooking/mutation args don't yet explicitly include meetingLink
-        // but we know the backend supports it.
-        meetingLink: link,
-      } as Parameters<typeof updateStatus>[0]).unwrap();
+  const handleUpdateLink = useCallback(
+    async (link: string) => {
+      if (!selectedBooking) return;
+      try {
+        // Assuming the API can handle meetingLink in the patch body
+        await updateStatus({
+          id: selectedBooking.id,
+          // Using any cast here if IBooking/mutation args don't yet explicitly include meetingLink
+          // but we know the backend supports it.
+          meetingLink: link,
+        } as Parameters<typeof updateStatus>[0]).unwrap();
 
-      toast.success("Meeting link updated successfully.");
-      setLinkDialogOpen(false);
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to update link.");
-    }
-  }, [updateStatus, selectedBooking]);
+        toast.success("Meeting link updated successfully.");
+        setLinkDialogOpen(false);
+      } catch (error: unknown) {
+        const err = error as { data?: { message?: string } };
+        toast.error(err?.data?.message || "Failed to update link.");
+      }
+    },
+    [updateStatus, selectedBooking],
+  );
 
-  const handleStatusChange = useCallback(async (id: string, status: string) => {
-    try {
-      await updateStatus({ id, status }).unwrap();
-      toast.success(`Session marked as ${status.toLowerCase()}.`);
-    } catch (error: unknown) {
-      const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to update status.");
-    }
-  }, [updateStatus]);
+  const handleStatusChange = useCallback(
+    async (id: string, status: string) => {
+      try {
+        await updateStatus({ id, status }).unwrap();
+        toast.success(`Session marked as ${status.toLowerCase()}.`);
+      } catch (error: unknown) {
+        const err = error as { data?: { message?: string } };
+        toast.error(err?.data?.message || "Failed to update status.");
+      }
+    },
+    [updateStatus],
+  );
 
   const columns = useMemo<Column<IBooking>[]>(
     () => [
@@ -166,18 +188,27 @@ export default function ManageSessionsPage() {
         header: "Agenda & Timing",
         cell: (row) => (
           <div className="py-1">
-            <p className="font-bold tracking-tight text-foreground max-w-[220px] truncate" title={row.notes}>
+            <p
+              className="font-bold tracking-tight text-foreground max-w-[220px] truncate"
+              title={row.notes}
+            >
               {row.notes || "General Mentorship"}
             </p>
             <div className="flex items-center gap-1.5 mt-2">
               <span className="flex items-center gap-1 bg-muted rounded-md px-2 py-0.5 text-[10px] uppercase font-bold text-muted-foreground tracking-widest">
                 <Clock className="h-3 w-3" />
-                {row.startTime ? format(new Date(row.startTime), "MMM dd, yy") : "N/A"}
+                {row.startTime
+                  ? format(new Date(row.startTime), "MMM dd, yy")
+                  : "N/A"}
               </span>
-              <span className="text-[10px] font-bold text-muted-foreground/50">—</span>
+              <span className="text-[10px] font-bold text-muted-foreground/50">
+                —
+              </span>
               <span className="text-[11px] font-extrabold tracking-tight text-primary">
-                {row.startTime ? format(new Date(row.startTime), "HH:mm") : "N/A"} -{" "}
-                {row.endTime ? format(new Date(row.endTime), "HH:mm") : "N/A"}
+                {row.startTime
+                  ? format(new Date(row.startTime), "HH:mm")
+                  : "N/A"}{" "}
+                - {row.endTime ? format(new Date(row.endTime), "HH:mm") : "N/A"}
               </span>
             </div>
           </div>
@@ -188,18 +219,30 @@ export default function ManageSessionsPage() {
         header: "Session State",
         cell: (row) => {
           const variants: Record<string, string> = {
-            PENDING: "bg-amber-100/50 text-amber-700 border-amber-200 shadow-[0_0_10px_rgba(251,191,36,0.2)]",
-            SCHEDULED: "bg-emerald-100/50 text-emerald-700 border-emerald-200 shadow-[0_0_10px_rgba(52,211,153,0.2)]",
-            COMPLETED: "bg-blue-100/50 text-blue-700 border-blue-200 shadow-[0_0_10px_rgba(96,165,250,0.2)]",
-            CANCELED: "bg-destructive/10 text-destructive border-destructive/20",
+            PENDING:
+              "bg-amber-100/50 text-amber-700 border-amber-200 shadow-[0_0_10px_rgba(251,191,36,0.2)]",
+            SCHEDULED:
+              "bg-emerald-100/50 text-emerald-700 border-emerald-200 shadow-[0_0_10px_rgba(52,211,153,0.2)]",
+            COMPLETED:
+              "bg-blue-100/50 text-blue-700 border-blue-200 shadow-[0_0_10px_rgba(96,165,250,0.2)]",
+            CANCELED:
+              "bg-destructive/10 text-destructive border-destructive/20",
           };
 
           let icon = <AlertCircle className="h-3 w-3 mr-1.5" />;
-          if (row.status === "SCHEDULED") icon = <CheckCircle2 className="h-3 w-3 mr-1.5" />;
-          if (row.status === "COMPLETED") icon = <History className="h-3 w-3 mr-1.5" />;
+          if (row.status === "SCHEDULED")
+            icon = <CheckCircle2 className="h-3 w-3 mr-1.5" />;
+          if (row.status === "COMPLETED")
+            icon = <History className="h-3 w-3 mr-1.5" />;
 
           return (
-            <Badge variant="outline" className={cn("px-4 py-1.5 font-bold rounded-xl border", variants[row.status] || variants.PENDING)}>
+            <Badge
+              variant="outline"
+              className={cn(
+                "px-4 py-1.5 font-bold rounded-xl border",
+                variants[row.status] || variants.PENDING,
+              )}
+            >
               <span className="flex items-center uppercase text-[10px] tracking-widest">
                 {icon}
                 {row.status}
@@ -216,12 +259,16 @@ export default function ManageSessionsPage() {
           const amount = row.payment?.amount || row.mentor?.hourlyRate || 0;
           return (
             <div className="flex flex-col gap-1.5 items-start">
-              <span className="font-heading font-black text-2xl tracking-tighter text-foreground">${amount}</span>
+              <span className="font-heading font-black text-2xl tracking-tighter text-foreground">
+                ${amount}
+              </span>
               <Badge
                 variant="secondary"
                 className={cn(
                   "text-[9px] uppercase tracking-widest font-extrabold px-2 py-0.5 rounded-md border-none",
-                  isPaid ? "bg-emerald-500/15 text-emerald-700" : "bg-rose-500/10 text-rose-600 animate-pulse",
+                  isPaid
+                    ? "bg-emerald-500/15 text-emerald-700"
+                    : "bg-rose-500/10 text-rose-600 animate-pulse",
                 )}
               >
                 {isPaid ? "Settled" : "Awaiting"}
@@ -241,44 +288,75 @@ export default function ManageSessionsPage() {
           if (isCancelled) {
             return (
               <div className="w-full text-center px-4 py-3 rounded-xl bg-destructive/5 border border-destructive/20">
-                <span className="text-[10px] uppercase tracking-widest font-bold text-destructive/60">Cancelled</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-destructive/60">
+                  Cancelled
+                </span>
               </div>
             );
           }
 
           if (isCompleted) {
-             return (
-               <div className="w-full text-center px-4 py-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                 <span className="text-[10px] uppercase tracking-widest font-bold text-blue-500/60">Session Finished</span>
-               </div>
-             );
+            return (
+              <div className="w-full text-center px-4 py-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                <span className="text-[10px] uppercase tracking-widest font-bold text-blue-500/60">
+                  Session Finished
+                </span>
+              </div>
+            );
           }
 
           return (
             <div className="flex flex-col gap-2 w-full">
-              <Button
-                onClick={() => {
-                  setSelectedBooking(row);
-                  setLinkDialogOpen(true);
-                }}
-                className="w-full h-11 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 gap-2 transition-all active:scale-95 group text-sm"
-              >
-                {row.meetingLink ? <ExternalLink className="h-4 w-4" /> : <LinkIcon className="h-4 w-4" />}
-                {row.meetingLink ? "Edit Link" : "Set Room"}
-              </Button>
+              {row.meetingLink ? (
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      if (row.meetingLink) {
+                        window.open(row.meetingLink, "_blank");
+                      }
+                    }}
+                    className="flex-1 h-11 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 gap-2 transition-all active:scale-95 group text-sm"
+                  >
+                    <Video className="h-4 w-4" />
+                    Join Session
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedBooking(row);
+                      setLinkDialogOpen(true);
+                    }}
+                    className="h-11 w-11 rounded-xl border-primary/20 text-primary hover:bg-primary/10 transition-all p-0 flex items-center justify-center shrink-0"
+                    title="Update Link"
+                  >
+                    <LinkIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setSelectedBooking(row);
+                    setLinkDialogOpen(true);
+                  }}
+                  className="w-full h-11 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 gap-2 transition-all active:scale-95 group text-sm"
+                >
+                  <LinkIcon className="h-4 w-4" />
+                  Set Meeting Room
+                </Button>
+              )}
               <div className="flex gap-2">
                 <Button
                   onClick={() => handleStatusChange(row.id, "COMPLETED")}
                   className="flex-1 h-11 rounded-xl font-bold bg-blue-500 hover:bg-blue-600 text-white gap-2 transition-all active:scale-95 text-xs"
                 >
-                   Finalize
+                  Finalize
                 </Button>
                 <Button
-                   onClick={() => handleStatusChange(row.id, "CANCELED")}
-                   variant="outline"
-                   className="flex-1 h-11 rounded-xl font-bold border-destructive/30 text-destructive hover:bg-destructive hover:text-white transition-all text-xs"
+                  onClick={() => handleStatusChange(row.id, "CANCELED")}
+                  variant="outline"
+                  className="flex-1 h-11 rounded-xl font-bold border-destructive/30 text-destructive hover:bg-destructive hover:text-white transition-all text-xs"
                 >
-                   Drop
+                  Drop
                 </Button>
               </div>
             </div>
@@ -289,7 +367,8 @@ export default function ManageSessionsPage() {
     [handleStatusChange],
   );
 
-  const bookings: IBooking[] = (bookingsResponse as unknown as ApiResponse<IBooking[]>)?.data || [];
+  const bookings: IBooking[] = bookingsResponse?.data || [];
+  const meta = bookingsResponse?.meta;
 
   return (
     <>
@@ -301,7 +380,7 @@ export default function ManageSessionsPage() {
         initialLink={selectedBooking?.meetingLink}
       />
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 min-h-[85vh]">
+      <div className=" px-4 sm:px-6 lg:px-8 py-10 space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 min-h-[85vh]">
         {/* HEADER SECTION */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border/40 relative">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
@@ -311,15 +390,21 @@ export default function ManageSessionsPage() {
               <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-primary/10">
                 <Video className="h-5 w-5" />
               </div>
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Mentor Command Center</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">
+                Mentor Command Center
+              </span>
             </div>
 
             <h1 className="text-5xl md:text-6xl font-heading font-black tracking-tighter text-foreground drop-shadow-sm">
-              Manage <span className="text-muted-foreground/30 font-light">Sessions</span>
+              Manage{" "}
+              <span className="text-muted-foreground/30 font-light">
+                Sessions
+              </span>
             </h1>
 
             <p className="text-muted-foreground max-w-2xl text-lg font-medium leading-relaxed">
-              Orchestrate your mentorship workflow. Set meeting rooms, track attendee status, and finalize your professional engagements.
+              Orchestrate your mentorship workflow. Set meeting rooms, track
+              attendee status, and finalize your professional engagements.
             </p>
           </div>
         </div>
@@ -334,6 +419,18 @@ export default function ManageSessionsPage() {
             isLoading={isBookingsLoading}
             emptyMessage="No mentorship sessions discovered in your command legacy. Time to synchronize with new students."
           />
+
+          {/* Pagination */}
+          {!isBookingsLoading && bookings.length > 0 && meta && (
+            <Pagination
+              currentPage={page}
+              totalPages={meta.totalPages}
+              onPageChange={(newPage) => {
+                setPage(newPage);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          )}
         </section>
       </div>
     </>

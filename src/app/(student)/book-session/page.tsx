@@ -19,14 +19,22 @@ import { Badge } from "@/components/ui/badge";
 import { Schedule } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Pagination } from "@/components/shared/Pagination";
 
 export default function BookSessionPage() {
-  const { data: schedulesResponse, isLoading } =
-    useGetAllSchedulesQuery(undefined);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data: schedulesResponse, isLoading } = useGetAllSchedulesQuery({
+    page,
+    limit,
+  });
   const [createBooking, { isLoading: isBooking }] = useCreateBookingMutation();
   const router = useRouter();
 
   const schedules: Schedule[] = schedulesResponse?.data || [];
+  const meta = schedulesResponse?.meta;
 
   const handleBookSlot = useCallback(
     async (schedule: Schedule) => {
@@ -71,22 +79,20 @@ export default function BookSessionPage() {
 
       const toastId = toast.loading("Reserving your session...");
       try {
-        const res = await createBooking({
+        await createBooking({
           mentorId,
           startTime: startTime.toISOString(),
           endTime: endTime.toISOString(),
           notes: "General mentorship session",
         }).unwrap();
 
-        if (res?.success) {
-          toast.success(
-            "Session successfully requested! Please finalize payment.",
-            {
-              id: toastId,
-            },
-          );
-          router.push("/session-history"); // Redirect to history page to view/pay
-        }
+        toast.success(
+          "Session successfully requested! Please finalize payment.",
+          {
+            id: toastId,
+          },
+        );
+        router.push("/session-history");
       } catch (error: unknown) {
         const err = error as { data?: { message?: string } };
         toast.error(err?.data?.message || "Failed to book this session.", {
@@ -174,12 +180,23 @@ export default function BookSessionPage() {
         cell: (row) => (
           <Button
             onClick={() => handleBookSlot(row)}
-            disabled={isBooking}
-            className="h-11 px-6 rounded-xl font-bold bg-primary hover:bg-primary/95 text-white shadow-lg shadow-primary/20 gap-2 transition-all active:scale-95 group text-xs"
+            disabled={isBooking || row.isBooked}
+            className={cn(
+              "h-11 px-6 rounded-xl font-bold gap-2 transition-all active:scale-95 group text-xs min-w-30",
+              row.isBooked
+                ? "bg-muted text-muted-foreground cursor-not-allowed border-none shadow-none"
+                : "bg-primary hover:bg-primary/95 text-white shadow-lg shadow-primary/20",
+            )}
           >
-            <Video className="h-4 w-4" />
-            Book Now
-            <ChevronRight className="h-4 w-4 opacity-50 group-hover:translate-x-0.5 transition-transform" />
+            {row.isBooked ? (
+              "Booked Out"
+            ) : (
+              <>
+                <Video className="h-4 w-4" />
+                Book Now
+                <ChevronRight className="h-4 w-4 opacity-50 group-hover:translate-x-0.5 transition-transform" />
+              </>
+            )}
           </Button>
         ),
       },
@@ -215,6 +232,20 @@ export default function BookSessionPage() {
             the globe and elevate your skills in just one session.
           </p>
         </div>
+
+        <div className="flex items-center gap-4 bg-muted/30 p-4 rounded-3xl border border-border/50 backdrop-blur-md">
+          <div className="h-10 w-10 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
+            <CalendarIcon className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-muted-foreground/70">
+              Total Available
+            </p>
+            <p className="text-xl font-black text-foreground">
+              {meta?.total || schedules.length}
+            </p>
+          </div>
+        </div>
       </div>
 
       <section className="relative">
@@ -226,6 +257,18 @@ export default function BookSessionPage() {
           isLoading={isLoading}
           emptyMessage="No available mentorship schedules discovered in our verified roster. Check back soon."
         />
+
+        {/* Pagination Section */}
+        {!isLoading && meta && meta.totalPages > 0 && (
+          <Pagination
+            currentPage={page}
+            totalPages={meta.totalPages}
+            onPageChange={(newPage) => {
+              setPage(newPage);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        )}
       </section>
     </div>
   );
