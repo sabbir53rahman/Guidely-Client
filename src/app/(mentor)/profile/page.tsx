@@ -19,6 +19,7 @@ import {
   Save,
   Rocket,
   DollarSign,
+  Camera,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,6 +56,41 @@ function MentorProfileForm({ existingProfile }: { existingProfile?: Mentor }) {
       ...prev,
       [name]: (name === "experience" || name === "hourlyRate") ? Number(value) : value,
     }));
+  };
+
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploadingImage(true);
+      const imgData = new FormData();
+      imgData.append("image", file);
+
+      const url = `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMAGE_HOSTING_KEY}`;
+      const response = await fetch(url, {
+        method: "POST",
+        body: imgData,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setFormData((prev) => ({
+          ...prev,
+          profilePhoto: data.data.display_url,
+        }));
+        toast.success("Image uploaded successfully!");
+      } else {
+        throw new Error(data.error?.message || "Failed to upload image");
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to upload image");
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,6 +131,17 @@ function MentorProfileForm({ existingProfile }: { existingProfile?: Mentor }) {
                      <User className="h-20 w-20 text-primary-foreground/50" />
                   </div>
                )}
+               <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer z-20 backdrop-blur-xs">
+                 {isUploadingImage ? (
+                    <Loader2 className="h-8 w-8 text-white animate-spin" />
+                 ) : (
+                    <>
+                      <Camera className="h-8 w-8 text-white mb-2" />
+                      <span className="text-white text-xs font-bold tracking-wider">UPLOAD</span>
+                    </>
+                 )}
+                 <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploadingImage} />
+               </label>
             </div>
             
             <div className="text-primary-foreground text-center md:text-left flex-1">

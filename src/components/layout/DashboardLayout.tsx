@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { ThemeToggle } from "./ThemeToggle";
-import { Search, Bell, Menu } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Bell, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAppSelector } from "@/hooks/useRedux";
@@ -23,12 +22,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   }, [user, isLoading, router]);
 
   if (isLoading) {
-     return (
-       <div className="h-screen flex flex-col items-center justify-center space-y-4">
-         <div className="h-10 w-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-         <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Synchronizing Session...</p>
-       </div>
-     );
+    return (
+      <div className="h-screen flex flex-col items-center justify-center space-y-4">
+        <div className="h-10 w-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+          Synchronizing Session...
+        </p>
+      </div>
+    );
   }
 
   return (
