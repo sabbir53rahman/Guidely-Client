@@ -18,7 +18,7 @@ const adminApi = baseApi.injectEndpoints({
         page?: number;
         limit?: number;
         role?: string;
-        search?: string;
+        searchTerm?: string;
         status?: string;
       }
     >({

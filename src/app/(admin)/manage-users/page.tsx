@@ -16,7 +16,11 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-import { useGetAllUsersQuery, useToggleUserStatusMutation, useDeleteUserMutation } from "@/redux/features/admin/adminApi";
+import {
+  useGetAllUsersQuery,
+  useToggleUserStatusMutation,
+  useDeleteUserMutation,
+} from "@/redux/features/admin/adminApi";
 import { Button } from "@/components/ui/button";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
@@ -45,74 +49,65 @@ export default function ManageUsersPage() {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [actionType, setActionType] = useState<'activate' | 'block' | 'delete'>('activate');
+  const [actionType, setActionType] = useState<"activate" | "block" | "delete">(
+    "activate",
+  );
 
   const { data: usersResponse, isLoading } = useGetAllUsersQuery({
     page,
     limit,
-    search,
+    searchTerm: search || undefined,
     role: role || undefined,
     status: status || undefined,
   });
 
-  const [toggleUserStatus, { isLoading: isTogglingStatus }] = useToggleUserStatusMutation();
+  const [toggleUserStatus, { isLoading: isTogglingStatus }] =
+    useToggleUserStatusMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const users: UserType[] = usersResponse?.data || [];
   const meta = usersResponse?.meta;
 
-  const handleStatusToggle = useCallback(
-    async (user: UserType) => {
-      setSelectedUser(user);
-      const isActive = user.status === "ACTIVE";
-      setActionType(isActive ? 'block' : 'activate');
-      setIsStatusModalOpen(true);
-    },
-    []
-  );
+  const handleStatusToggle = useCallback(async (user: UserType) => {
+    setSelectedUser(user);
+    const isActive = user.status === "ACTIVE";
+    setActionType(isActive ? "block" : "activate");
+    setIsStatusModalOpen(true);
+  }, []);
 
-  const confirmStatusToggle = useCallback(
-    async () => {
-      if (!selectedUser) return;
-      
-      try {
-        await toggleUserStatus(selectedUser.id).unwrap();
-        toast.success(`User ${actionType}d successfully!`);
-        setIsStatusModalOpen(false);
-        setSelectedUser(null);
-      } catch (error: unknown) {
-        const err = error as { data?: { message?: string } };
-        toast.error(err?.data?.message || "Failed to update user status.");
-      }
-    },
-    [selectedUser, actionType, toggleUserStatus]
-  );
+  const confirmStatusToggle = useCallback(async () => {
+    if (!selectedUser) return;
 
-  const handleDeleteUser = useCallback(
-    async (user: UserType) => {
-      setSelectedUser(user);
-      setActionType('delete');
-      setIsDeleteModalOpen(true);
-    },
-    []
-  );
+    try {
+      await toggleUserStatus(selectedUser.id).unwrap();
+      toast.success(`User ${actionType}d successfully!`);
+      setIsStatusModalOpen(false);
+      setSelectedUser(null);
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to update user status.");
+    }
+  }, [selectedUser, actionType, toggleUserStatus]);
 
-  const confirmDeleteUser = useCallback(
-    async () => {
-      if (!selectedUser) return;
-      
-      try {
-        await deleteUser(selectedUser.id).unwrap();
-        toast.success("User deleted successfully!");
-        setIsDeleteModalOpen(false);
-        setSelectedUser(null);
-      } catch (error: unknown) {
-        const err = error as { data?: { message?: string } };
-        toast.error(err?.data?.message || "Failed to delete user.");
-      }
-    },
-    [selectedUser, deleteUser]
-  );
+  const handleDeleteUser = useCallback(async (user: UserType) => {
+    setSelectedUser(user);
+    setActionType("delete");
+    setIsDeleteModalOpen(true);
+  }, []);
+
+  const confirmDeleteUser = useCallback(async () => {
+    if (!selectedUser) return;
+
+    try {
+      await deleteUser(selectedUser.id).unwrap();
+      toast.success("User deleted successfully!");
+      setIsDeleteModalOpen(false);
+      setSelectedUser(null);
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to delete user.");
+    }
+  }, [selectedUser, deleteUser]);
 
   const getRoleIcon = (role: string) => {
     switch (role) {
@@ -190,7 +185,7 @@ export default function ManageUsersPage() {
             variant="outline"
             className={cn(
               "px-3 py-1.5 font-bold rounded-xl border uppercase text-[10px] tracking-widest flex items-center gap-1.5 w-fit",
-              getRoleBadgeColor(row.role)
+              getRoleBadgeColor(row.role),
             )}
           >
             {getRoleIcon(row.role)}
@@ -207,7 +202,7 @@ export default function ManageUsersPage() {
             variant="outline"
             className={cn(
               "px-3 py-1.5 font-bold rounded-xl border uppercase text-[10px] tracking-widest",
-              getStatusBadgeColor(row.status || "ACTIVE")
+              getStatusBadgeColor(row.status || "ACTIVE"),
             )}
           >
             {row.status || "ACTIVE"}
@@ -220,10 +215,12 @@ export default function ManageUsersPage() {
         className: "w-[100px]",
         cell: (row) => (
           <div className="flex items-center gap-2">
-            <div className={cn(
-              "h-2 w-2 rounded-full",
-              row.isVerified ? "bg-emerald-500" : "bg-muted"
-            )} />
+            <div
+              className={cn(
+                "h-2 w-2 rounded-full",
+                row.isVerified ? "bg-emerald-500" : "bg-muted",
+              )}
+            />
             <span className="text-xs font-bold text-muted-foreground">
               {row.isVerified ? "Yes" : "No"}
             </span>
@@ -238,7 +235,9 @@ export default function ManageUsersPage() {
           <div className="flex items-center gap-2">
             <Calendar className="h-3.5 w-3.5 text-muted-foreground/60" />
             <span className="text-[13px] font-extrabold tracking-tight text-foreground">
-              {row.createdAt ? format(new Date(row.createdAt), "MMM dd, yyyy") : "N/A"}
+              {row.createdAt
+                ? format(new Date(row.createdAt), "MMM dd, yyyy")
+                : "N/A"}
             </span>
           </div>
         ),
@@ -259,7 +258,7 @@ export default function ManageUsersPage() {
                 "h-8 px-3 rounded-lg font-medium text-xs transition-all duration-200",
                 row.status === "ACTIVE"
                   ? "text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                  : "text-emerald-600 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300"
+                  : "text-emerald-600 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300",
               )}
             >
               {row.status === "ACTIVE" ? (
@@ -290,7 +289,7 @@ export default function ManageUsersPage() {
         ),
       },
     ],
-    [handleStatusToggle, handleDeleteUser, isTogglingStatus, isDeleting]
+    [handleStatusToggle, handleDeleteUser, isTogglingStatus, isDeleting],
   );
 
   return (
@@ -311,13 +310,12 @@ export default function ManageUsersPage() {
 
           <h1 className="text-5xl md:text-6xl font-heading font-black tracking-tighter text-foreground drop-shadow-sm">
             Manage{" "}
-            <span className="text-muted-foreground/30 font-light">
-              Users
-            </span>
+            <span className="text-muted-foreground/30 font-light">Users</span>
           </h1>
 
           <p className="text-muted-foreground max-w-2xl text-lg font-medium leading-relaxed">
-            Oversee all platform users, manage roles, and maintain system security with comprehensive user administration tools.
+            Oversee all platform users, manage roles, and maintain system
+            security with comprehensive user administration tools.
           </p>
         </div>
 
@@ -396,7 +394,9 @@ export default function ManageUsersPage() {
               }}
               className={cn(
                 "px-4 py-2 rounded-xl font-medium whitespace-nowrap transition-all duration-300",
-                !status ? "bg-secondary text-secondary-foreground shadow-lg" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                !status
+                  ? "bg-secondary text-secondary-foreground shadow-lg"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80",
               )}
             >
               All Status
@@ -410,7 +410,9 @@ export default function ManageUsersPage() {
                 }}
                 className={cn(
                   "px-4 py-2 rounded-xl font-medium whitespace-nowrap transition-all duration-300",
-                  status === statusOption ? "bg-secondary text-secondary-foreground shadow-lg" : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  status === statusOption
+                    ? "bg-secondary text-secondary-foreground shadow-lg"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80",
                 )}
               >
                 {statusOption.charAt(0).toUpperCase() + statusOption.slice(1)}
@@ -452,12 +454,18 @@ export default function ManageUsersPage() {
               <AlertTriangle className="h-6 w-6 text-amber-600" />
             </div>
             <DialogTitle className="text-center text-lg font-bold">
-              {actionType === 'activate' ? 'Activate User' : 'Block User'}
+              {actionType === "activate" ? "Activate User" : "Block User"}
             </DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
-              Are you sure you want to {actionType} <span className="font-semibold text-foreground">{selectedUser?.name}</span>?
-              {actionType === 'block' && ' This will prevent them from accessing the platform.'}
-              {actionType === 'activate' && ' This will restore their full access to the platform.'}
+              Are you sure you want to {actionType}{" "}
+              <span className="font-semibold text-foreground">
+                {selectedUser?.name}
+              </span>
+              ?
+              {actionType === "block" &&
+                " This will prevent them from accessing the platform."}
+              {actionType === "activate" &&
+                " This will restore their full access to the platform."}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-3 sm:gap-4">
@@ -476,9 +484,9 @@ export default function ManageUsersPage() {
               disabled={isTogglingStatus}
               className={cn(
                 "flex-1 rounded-xl font-medium",
-                actionType === 'activate' 
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
-                  : "bg-red-600 hover:bg-red-700 text-white"
+                actionType === "activate"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  : "bg-red-600 hover:bg-red-700 text-white",
               )}
             >
               {isTogglingStatus ? (
@@ -488,7 +496,7 @@ export default function ManageUsersPage() {
                 </>
               ) : (
                 <>
-                  {actionType === 'activate' ? (
+                  {actionType === "activate" ? (
                     <>
                       <UserCheck className="h-4 w-4 mr-2" />
                       Activate
@@ -517,9 +525,15 @@ export default function ManageUsersPage() {
               Delete User
             </DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
-              Are you sure you want to permanently delete <span className="font-semibold text-foreground">{selectedUser?.name}</span>?
+              Are you sure you want to permanently delete{" "}
+              <span className="font-semibold text-foreground">
+                {selectedUser?.name}
+              </span>
+              ?
               <br />
-              <span className="text-red-500 font-medium">This action cannot be undone.</span>
+              <span className="text-red-500 font-medium">
+                This action cannot be undone.
+              </span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-3 sm:gap-4">

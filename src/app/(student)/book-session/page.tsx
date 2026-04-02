@@ -62,14 +62,32 @@ export default function BookSessionPage() {
         date = addDays(date, 1);
       }
 
-      const [startH, startM] = schedule.startTime.split(":");
-      const [endH, endM] = schedule.endTime.split(":");
+      // Get user's timezone and handle UTC conversion properly
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
+      // Convert local time to UTC for backend
+      const convertToUTC = (date: string, time24: string) => {
+        const [hours, minutes] = time24.split(':');
+        const dateObj = new Date(date);
+        dateObj.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        return dateObj.toISOString(); // Send UTC to backend
+      };
 
-      const startTime = new Date(date);
-      startTime.setHours(parseInt(startH, 10), parseInt(startM, 10), 0);
+      // Convert UTC to local time for display (debug)
+      const convertToLocalTime = (utcDate: string) => {
+        const date = new Date(utcDate);
+        return date.toLocaleString('en-US', {
+          timeZone: userTimezone,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      };
 
-      const endTime = new Date(date);
-      endTime.setHours(parseInt(endH, 10), parseInt(endM, 10), 0);
+      // Create booking times in UTC for backend
+      const bookingDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+      const startTime = convertToUTC(bookingDate, schedule.startTime);
+      const endTime = convertToUTC(bookingDate, schedule.endTime);
 
       const mentorId = schedule.mentorId || schedule.mentor?.id;
       if (!mentorId) {
@@ -77,12 +95,26 @@ export default function BookSessionPage() {
         return;
       }
 
+      // Debug logging to verify the timezone conversion process
+      console.log("=== BOOKING DEBUG ===");
+      console.log("User timezone:", userTimezone);
+      console.log("Schedule data:", schedule);
+      console.log("Original schedule time:", `${schedule.startTime} - ${schedule.endTime}`);
+      console.log("Booking date:", bookingDate);
+      console.log("UTC times being sent to backend:", {
+        startTime: startTime,
+        endTime: endTime,
+        startTimeLocal: convertToLocalTime(startTime),
+        endTimeLocal: convertToLocalTime(endTime)
+      });
+      console.log("==================");
+
       const toastId = toast.loading("Reserving your session...");
       try {
         await createBooking({
           mentorId,
-          startTime: startTime.toISOString(),
-          endTime: endTime.toISOString(),
+          startTime: startTime, // Already in UTC ISO format
+          endTime: endTime, // Already in UTC ISO format
           notes: "General mentorship session",
         }).unwrap();
 
