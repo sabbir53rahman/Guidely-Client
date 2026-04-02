@@ -30,9 +30,24 @@ const FEATURES = [
 ];
 
 const MENTOR_PREVIEW = [
-  { name: "Sarah Chen", role: "Senior Product Designer", company: "Airbnb", rating: 4.9 },
-  { name: "Marcus Johnson", role: "Engineering Lead", company: "Stripe", rating: 5.0 },
-  { name: "Elena Rodriguez", role: "Marketing Director", company: "Spotify", rating: 4.8 },
+  {
+    name: "Sarah Chen",
+    role: "Senior Product Designer",
+    company: "Airbnb",
+    rating: 4.9,
+  },
+  {
+    name: "Marcus Johnson",
+    role: "Engineering Lead",
+    company: "Stripe",
+    rating: 5.0,
+  },
+  {
+    name: "Elena Rodriguez",
+    role: "Marketing Director",
+    company: "Spotify",
+    rating: 4.8,
+  },
 ];
 
 export function Hero() {
@@ -46,11 +61,11 @@ export function Hero() {
       </div>
 
       {/* Grid Pattern Overlay */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `linear-gradient(rgba(99,102,241,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.5) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
+          backgroundSize: "60px 60px",
         }}
       />
 
@@ -60,8 +75,8 @@ export function Hero() {
           <div className="space-y-8">
             {/* Live Badge */}
             <div className="inline-flex items-center gap-2">
-              <Badge 
-                variant="secondary" 
+              <Badge
+                variant="secondary"
                 className="px-4 py-2 rounded-full bg-primary/10 text-primary border-primary/20 font-medium"
               >
                 <span className="relative flex h-2 w-2 mr-2">
@@ -84,8 +99,9 @@ export function Hero() {
                 Mentors
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                Connect with 5,000+ industry experts for personalized 1-on-1 sessions. 
-                Accelerate your career growth with real-world guidance.
+                Connect with 5,000+ industry experts for personalized 1-on-1
+                sessions. Accelerate your career growth with real-world
+                guidance.
               </p>
             </div>
 
@@ -146,7 +162,7 @@ export function Hero() {
             {/* Main Hero Card */}
             <div className="relative bg-card rounded-3xl border border-border shadow-2xl p-6 overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
-              
+
               {/* Header */}
               <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-2">
@@ -169,7 +185,10 @@ export function Hero() {
                     className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-colors group cursor-pointer"
                   >
                     <div className="h-14 w-14 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
-                      {mentor.name.split(' ').map(n => n[0]).join('')}
+                      {mentor.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-foreground truncate">
@@ -222,7 +241,9 @@ export function Hero() {
                 </div>
                 <div className="pl-2">
                   <p className="text-sm font-bold text-foreground">2M+</p>
-                  <p className="text-xs text-muted-foreground">Active learners</p>
+                  <p className="text-xs text-muted-foreground">
+                    Active learners
+                  </p>
                 </div>
               </div>
             </div>
