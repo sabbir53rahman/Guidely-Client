@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, MinusCircle, Zap } from "lucide-react";
+import Link from "next/link";
 
 const FEATURES = [
   {
@@ -65,7 +66,9 @@ type FeatureStatus = "full" | "partial" | "none";
 
 function StatusIcon({ status }: { status: FeatureStatus }) {
   if (status === "full")
-    return <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-500/20" />;
+    return (
+      <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-500/20" />
+    );
   if (status === "partial")
     return <MinusCircle className="w-5 h-5 text-amber-500 fill-amber-500/20" />;
   return <XCircle className="w-5 h-5 text-muted-foreground/40 fill-muted/10" />;
@@ -173,10 +176,12 @@ export function ComparisonTable() {
 
         {/* CTA Below Table */}
         <div className="text-center mt-10">
-          <button className="group inline-flex items-center gap-3 px-10 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/25">
-            Start Free with Guidely
-            <Zap className="w-5 h-5 group-hover:scale-110 transition-transform fill-current" />
-          </button>
+          <Link href="/mentors">
+            <button className="group inline-flex items-center gap-3 px-10 py-4 bg-primary text-primary-foreground rounded-2xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/25">
+              Start Free with Guidely
+              <Zap className="w-5 h-5 group-hover:scale-110 transition-transform fill-current" />
+            </button>
+          </Link>
         </div>
       </div>
     </section>

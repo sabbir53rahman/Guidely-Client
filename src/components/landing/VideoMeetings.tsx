@@ -8,6 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const FEATURES = [
   {
@@ -77,23 +78,27 @@ export function VideoMeetings() {
               ))}
             </div>
 
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-full font-medium">
-              Start Video Meeting
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link href="/mentors">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-full font-medium">
+                Start Video Meeting
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
           {/* Right Video Preview */}
           <div className="relative">
             <div className="aspect-video bg-muted rounded-2xl overflow-hidden shadow-2xl border border-border">
               <video
-                src="/images/mentor_meet.mp4"
                 className="h-full w-full object-cover"
                 autoPlay
                 muted
                 loop
                 playsInline
-              />
+                preload="metadata"
+              >
+                <source src="/images/mentor_meet.mp4" type="video/mp4" />
+              </video>
             </div>
 
             {/* Floating Elements */}
