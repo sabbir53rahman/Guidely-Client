@@ -62,6 +62,8 @@ export default function RootLayout({
         >
           <ReduxProvider>
             {children}
+            <script dangerouslySetInnerHTML={{ __html: `window.chtlConfig = { chatbotId: "8329543734" }` }} />
+            <script async data-id="8329543734" id="chtl-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
             <Toaster richColors position="top-right" />
           </ReduxProvider>
         </ThemeProvider>
