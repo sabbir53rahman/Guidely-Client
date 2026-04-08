@@ -44,9 +44,10 @@ export const LANGUAGES = [
 ];
 
 export const NAV_LINKS = [
-  { label: "Browse Mentors", href: "/mentors" },
-  // { label: "Become a Mentor", href: "/become-mentor" },
-  // { label: "How it Works", href: "/#how-it-works" },
+  { label: "Home", href: "/" },
+  { label: "Mentors", href: "/mentors" },
+  { label: "How it Works", href: "/#how-it-works" },
+  { label: "Features", href: "/#features" },
 ];
 
 export const FOOTER_LINKS = {

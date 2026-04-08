@@ -1,255 +1,258 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
+  BookOpen,
+  Headphones,
+  Sparkles,
+  CalendarDays,
   ArrowRight,
-  Play,
   Star,
-  Users,
-  Zap,
-  CheckCircle2,
-  MessageCircle,
-  Calendar,
-  TrendingUp,
+  Play,
+  Briefcase,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
+import hero_mentor_main from "../../../public/images/hero_mentor_main.jpg";
+import hero_mentor_secondary from "../../../public/images/hero_mentor_secondary.jpg";
 
 const TRUSTED_BY = [
-  { name: "Google", logo: "G" },
-  { name: "Microsoft", logo: "M" },
-  { name: "Amazon", logo: "A" },
+  { name: "Google", logo: "Google" },
+  { name: "Microsoft", logo: "Microsoft" },
+  { name: "Amazon", logo: "Amazon" },
   { name: "Meta", logo: "Meta" },
-  { name: "Netflix", logo: "N" },
+  { name: "Netflix", logo: "Netflix" },
 ];
 
-const FEATURES = [
-  { icon: CheckCircle2, text: "Verified Expert Mentors" },
-  { icon: MessageCircle, text: "1-on-1 Live Sessions" },
-  { icon: Calendar, text: "Flexible Scheduling" },
-  { icon: Zap, text: "Instant Booking" },
-];
-
-const MENTOR_PREVIEW = [
+const MENU_LINKS = [
   {
-    name: "Sarah Chen",
-    role: "Senior Product Designer",
-    company: "Airbnb",
-    rating: 4.9,
+    icon: BookOpen,
+    title: "Read the Blog",
+    actionText: "Explore insights",
+    href: "/blog",
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
   },
   {
-    name: "Marcus Johnson",
-    role: "Engineering Lead",
-    company: "Stripe",
-    rating: 5.0,
+    icon: Headphones,
+    title: "The Tech Podcast",
+    actionText: "Listen now",
+    href: "/podcast",
+    color: "text-indigo-500",
+    bg: "bg-indigo-500/10",
   },
   {
-    name: "Elena Rodriguez",
-    role: "Marketing Director",
-    company: "Spotify",
-    rating: 4.8,
+    icon: Sparkles,
+    title: "Career Reset",
+    actionText: "Join community",
+    href: "/community",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
   },
 ];
 
 export function Hero() {
-  return (
-    <section className="relative min-h-screen overflow-hidden bg-background">
-      {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),transparent)]" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl" />
-      </div>
+  const [mounted, setMounted] = useState(false);
 
-      {/* Grid Pattern Overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(99,102,241,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.5) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        @keyframes bg-gradient-slide {
+          to { background-position: 200% center; }
+        }
+        .animate-bg-slide {
+          animation: bg-gradient-slide 6s linear infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+        .animate-float-delayed {
+          animation: float-delayed 5s ease-in-out infinite 1s;
+        }
+      `,
         }}
       />
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            {/* Live Badge */}
-            <div className="inline-flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                className="px-4 py-2 rounded-full bg-primary/10 text-primary border-primary/20 font-medium"
-              >
-                <span className="relative flex h-2 w-2 mr-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                </span>
-                2,847 mentors online now
-              </Badge>
-            </div>
+      <section className="relative bg-background min-h-[calc(100vh-80px)] pt-15 pb-15 flex flex-col justify-center overflow-hidden border-b border-border/40">
+        {/* Background Decorative Orbs */}
+        <div className="absolute top-[-10%] left-[-5%] w-[40%] max-w-[500px] h-[40%] rounded-full bg-primary/20 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] max-w-[500px] h-[40%] rounded-full bg-secondary/20 blur-[100px] pointer-events-none" />
 
-            {/* Headline */}
-            <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-foreground leading-[1.1] tracking-tight">
-                Master New Skills with{" "}
-                <span className="relative">
-                  <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    World-Class
-                  </span>
+        <div className="container relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-[1.1fr_1fr] gap-16 lg:gap-8 items-center">
+            {/* Left Column: Text & Links */}
+            <div
+              className={`flex flex-col justify-center pt-8 transition-all duration-1000 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-sm font-semibold w-fit mb-8 shadow-[0_0_20px_rgba(99,102,241,0.1)] hover:shadow-[0_0_25px_rgba(99,102,241,0.2)] transition-shadow cursor-default">
+                <Sparkles className="w-4 h-4" />
+                <span>Accepting new mentees for 2026</span>
+              </div>
+
+              <h1 className="text-4xl md:text-6xl lg:text-[4rem] font-bold text-foreground leading-[1.05] mb-6 text-center md:text-start font-serif tracking-tight">
+                Software Engineering <br className="hidden sm:block" />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-primary bg-size-[200%_auto] animate-bg-slide inline-block pb-2">
+                  & Career Mentor.
                 </span>{" "}
-                Mentors
+                <br className="hidden sm:block" />
+                Author. Speaker
               </h1>
-              <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                Connect with 5,000+ industry experts for personalized 1-on-1
-                sessions. Accelerate your career growth with real-world
-                guidance.
-              </p>
-            </div>
 
-            {/* Feature Pills */}
-            <div className="flex flex-wrap gap-3">
-              {FEATURES.map((feature) => (
-                <div
-                  key={feature.text}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border/50 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 text-center md:text-start max-w-xl leading-relaxed italic">
+                I help developers write cleaner code, rewire their
+                problem-solving mind, and reclaim their career trajectory, so
+                they can live fully actualized.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-2xl mb-14">
+                <Link
+                  href="/mentors"
+                  className="group relative flex items-center justify-center gap-3 px-8 py-4 w-full sm:w-auto rounded-2xl bg-primary text-primary-foreground font-semibold overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-primary/20 hover:shadow-primary/30"
                 >
-                  <feature.icon className="h-4 w-4 text-primary" />
-                  {feature.text}
-                </div>
-              ))}
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                className="group px-8 h-14 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
-              >
-                <Play className="mr-2 h-5 w-5 fill-current" />
-                Start Free Trial
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-14 px-8 rounded-xl font-semibold border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
-              >
-                <Users className="mr-2 h-5 w-5" />
-                Browse Mentors
-              </Button>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground font-medium">
-                Trusted by professionals at
-              </p>
-              <div className="flex flex-wrap items-center gap-6">
-                {TRUSTED_BY.map((company) => (
-                  <span
-                    key={company.name}
-                    className="text-lg font-bold text-muted-foreground/60 hover:text-foreground transition-colors"
-                  >
-                    {company.name}
+                  <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <CalendarDays className="w-5 h-5 relative z-10" />
+                  <span className="relative z-10">
+                    Book a Mentoring Session
                   </span>
-                ))}
-              </div>
-            </div>
-          </div>
+                  <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                </Link>
 
-          {/* Right Content - Mentor Cards */}
-          <div className="relative">
-            {/* Main Hero Card */}
-            <div className="relative bg-card rounded-3xl border border-border shadow-2xl p-6 overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
-
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6 relative z-10">
-                <div className="flex items-center gap-2">
-                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-primary-foreground" />
+                <button className="group flex items-center justify-center gap-3 px-8 py-4 w-full sm:w-auto rounded-2xl bg-card border border-border hover:bg-muted/50 hover:border-border font-semibold transition-all">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                   </div>
-                  <span className="font-bold text-foreground">Top Mentors</span>
-                </div>
-                <Badge variant="outline" className="rounded-full">
-                  <Star className="h-3 w-3 text-amber-500 mr-1 fill-current" />
-                  4.9 avg rating
-                </Badge>
+                  <span>Watch My Work</span>
+                </button>
               </div>
 
-              {/* Mentor List */}
-              <div className="space-y-4 relative z-10">
-                {MENTOR_PREVIEW.map((mentor) => (
-                  <div
-                    key={mentor.name}
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-colors group cursor-pointer"
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:w-[95%]">
+                {MENU_LINKS.map((link, idx) => (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="flex flex-col p-5 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/60 hover:border-primary/30 hover:bg-card/80 hover:shadow-lg transition-all duration-300 group"
+                    style={{ transitionDelay: `${mounted ? idx * 100 : 0}ms` }}
                   >
-                    <div className="h-14 w-14 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
-                      {mentor.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${link.bg} ${link.color} group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <link.icon className="w-5 h-5" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-foreground truncate">
-                        {mentor.name}
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {mentor.role} @ {mentor.company}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1 text-amber-500">
-                      <Star className="h-4 w-4 fill-current" />
-                      <span className="font-bold text-sm">{mentor.rating}</span>
-                    </div>
-                  </div>
+                    <span className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors text-sm md:text-base">
+                      {link.title}
+                    </span>
+                    <span className="text-xs md:text-sm text-muted-foreground font-medium flex items-center gap-1">
+                      {link.actionText}
+                      <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                    </span>
+                  </Link>
                 ))}
-              </div>
-
-              {/* Bottom CTA */}
-              <div className="mt-6 pt-6 border-t border-border/50">
-                <Button className="w-full h-12 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-semibold">
-                  View All 5,000+ Mentors
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
               </div>
             </div>
 
-            {/* Floating Stats Card */}
-            <div className="absolute -bottom-6 -left-6 bg-card rounded-2xl border border-border shadow-xl p-4 hidden lg:block">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-emerald-500" />
+            {/* Right Column: Imagery composition */}
+            <div
+              className={`relative flex items-center justify-center lg:justify-end h-[500px] lg:h-[700px] mt-16 lg:mt-0 transition-all duration-1000 delay-300 ease-out ${mounted ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
+            >
+              {/* Main Background Glow for Image */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/10 rounded-full blur-[80px]" />
+
+              {/* Main Picture */}
+              <div className="relative w-[70%] lg:w-[65%] h-[85%] rounded-[2rem] overflow-hidden shadow-2xl z-10 border-8 border-background bg-secondary group">
+                <div className="absolute inset-0 bg-primary/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-700" />
+                <Image
+                  src={hero_mentor_main}
+                  alt="Main Mentor Portrait"
+                  fill
+                  className="object-cover object-top transition-transform duration-1000 group-hover:scale-[1.03]"
+                  priority
+                />
+              </div>
+
+              {/* Floating Element 1 - Secondary Picture */}
+              <div className="absolute left-0 bottom-[5%] w-[45%] h-[35%] rounded-[2rem] overflow-hidden shadow-2xl z-20 border-[6px] border-background animate-float-delayed">
+                <Image
+                  src={hero_mentor_secondary}
+                  alt="Mentor session"
+                  fill
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-[1.5rem]" />
+              </div>
+
+              {/* Floating Element 2 - Rating Badge */}
+              <div className="absolute -top-4 right-[5%] bg-background/90 backdrop-blur-xl border border-border/60 p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-float">
+                <div className="bg-amber-500/10 text-amber-500 p-2.5 rounded-xl">
+                  <Star className="w-5 h-5 fill-current" />
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-foreground">94%</p>
-                  <p className="text-sm text-muted-foreground">Success Rate</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Rating Card */}
-            <div className="absolute -top-4 -right-4 bg-card rounded-2xl border border-border shadow-xl p-4 hidden lg:block">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 border-background bg-linear-to-br from-primary to-secondary"
-                    />
-                  ))}
-                </div>
-                <div className="pl-2">
-                  <p className="text-sm font-bold text-foreground">2M+</p>
-                  <p className="text-xs text-muted-foreground">
-                    Active learners
+                  <p className="font-bold text-foreground leading-tight">
+                    5.0 Rating
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    From 200+ mentees
                   </p>
                 </div>
               </div>
+
+              {/* Floating Element 3 - Experience Badge */}
+              <div
+                className="absolute top-[45%] -right-6 lg:-right-10 bg-card/90 backdrop-blur-xl border border-border/60 px-5 py-3.5 rounded-2xl shadow-xl z-20 flex items-center gap-3 animate-float"
+                style={{ animationDelay: "1.5s" }}
+              >
+                <div className="bg-green-500/10 text-green-500 p-2 rounded-full">
+                  <Briefcase className="w-4 h-4" />
+                </div>
+                <p className="font-bold text-sm tracking-wide">10+ Yrs Exp.</p>
+              </div>
+
+              {/* Decorative Dots Pattern */}
+              <div className="absolute -bottom-8 -right-8 grid grid-cols-5 gap-3 z-0 opacity-30">
+                {Array.from({ length: 25 }).map((_, idx) => (
+                  <div key={idx} className="w-2 h-2 rounded-full bg-primary" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Trusted By Footer */}
+          <div
+            className={`mt-24 pt-12 border-t border-border/40 flex flex-col items-center transition-all duration-1000 delay-500 ease-out ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          >
+            <p className="text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground mb-8">
+              Trusted by tech leaders from
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-x-12 lg:gap-x-20 gap-y-8 opacity-60 hover:opacity-100 transition-opacity duration-500 grayscale hover:grayscale-0">
+              {TRUSTED_BY.map((company) => (
+                <div
+                  key={company.name}
+                  className="text-2xl md:text-3xl font-black tracking-tighter text-foreground"
+                >
+                  {company.name}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

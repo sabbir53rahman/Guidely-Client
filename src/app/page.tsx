@@ -5,6 +5,10 @@ import { Hero } from "@/components/landing/Hero";
 import { TopMentors } from "@/components/landing/TopMentors";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { VideoMeetings } from "@/components/landing/VideoMeetings";
+import { TestimonialsWall } from "@/components/landing/TestimonialsWall";
+import { Workshops } from "@/components/landing/Workshops";
+import { ComparisonTable } from "@/components/landing/ComparisonTable";
+import { FAQ } from "@/components/landing/FAQ";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 
 export const metadata: Metadata = {
@@ -22,6 +26,10 @@ export default function LandingPage() {
         <TopMentors />
         <HowItWorks />
         <VideoMeetings />
+        <TestimonialsWall />
+        <Workshops />
+        <ComparisonTable />
+        <FAQ />
         <FinalCTA />
       </main>
       <Footer />

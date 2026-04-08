@@ -37,6 +37,14 @@ export default function Navbar() {
     return "/dashboard";
   };
 
+  const navLinksToDisplay = [
+    ...NAV_LINKS,
+    ...(isAuthenticated && user ? [
+      { label: "Dashboard", href: getDashboardLink() },
+      { label: "Profile", href: "/profile" }
+    ] : [])
+  ];
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -53,7 +61,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <ul className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
+            {navLinksToDisplay.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -151,7 +159,7 @@ export default function Navbar() {
           )}
         >
           <div className="flex flex-col gap-1 pt-2">
-            {NAV_LINKS.map((link) => (
+            {navLinksToDisplay.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

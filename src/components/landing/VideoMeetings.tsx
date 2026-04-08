@@ -1,6 +1,12 @@
 "use client";
 
-import { Video, MessageCircle, Share2, Calendar, ArrowRight } from "lucide-react";
+import {
+  Video,
+  MessageCircle,
+  Share2,
+  Calendar,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FEATURES = [
@@ -22,13 +28,17 @@ const FEATURES = [
   {
     icon: Calendar,
     title: "Easy Scheduling",
-    description: "Book sessions that fit your schedule with automatic reminders",
+    description:
+      "Book sessions that fit your schedule with automatic reminders",
   },
 ];
 
 export function VideoMeetings() {
   return (
-    <section className="py-20 bg-background transition-colors duration-500">
+    <section
+      id="features"
+      className="py-20 bg-background transition-colors duration-500"
+    >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -37,19 +47,22 @@ export function VideoMeetings() {
               <Video className="h-4 w-4" />
               Instant, Embedded Video Meetings
             </div>
-            
+
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Connect Face-to-Face with <span className="text-primary">Experts</span>
+              Connect Face-to-Face with{" "}
+              <span className="text-primary">Experts</span>
             </h2>
-            
+
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Experience seamless video calls directly in your browser. No downloads, no installations - just instant, high-quality video meetings with your mentors.
+              Experience seamless video calls directly in your browser. No
+              downloads, no installations - just instant, high-quality video
+              meetings with your mentors.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
               {FEATURES.map((feature) => (
                 <div key={feature.title} className="flex gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                     <feature.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
@@ -73,19 +86,16 @@ export function VideoMeetings() {
           {/* Right Video Preview */}
           <div className="relative">
             <div className="aspect-video bg-muted rounded-2xl overflow-hidden shadow-2xl border border-border">
-              <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
-                <div className="text-center">
-                  <Video className="h-16 w-16 text-primary mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    Video Meeting Preview
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Click to start your first session
-                  </p>
-                </div>
-              </div>
+              <video
+                src="/images/mentor_meet.mp4"
+                className="h-full w-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
             </div>
-            
+
             {/* Floating Elements */}
             <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium shadow-lg">
               HD Quality
