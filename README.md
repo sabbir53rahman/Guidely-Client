@@ -75,7 +75,7 @@ Password: 12345678
 
 ### 🎓 Student Account
 ```
-Email:    sabbir@gmail.com
+Email:    najirvai@gmail.com
 Password: 12345678
 ```
 **Access:** Student dashboard — browse mentors, book sessions, track progress, and manage bookings.
